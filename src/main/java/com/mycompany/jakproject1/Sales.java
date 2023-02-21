@@ -109,13 +109,18 @@ public class Sales extends javax.swing.JFrame {
         });
 
         jButton2.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        jButton2.setText("Delivery");
+        jButton2.setText("Purchases");
 
         jButton4.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jButton4.setText("Order In");
 
         jButton5.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jButton5.setText("Shift End");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Barcode");
 
@@ -142,6 +147,11 @@ public class Sales extends javax.swing.JFrame {
         });
 
         jButton6.setText("Cancel");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Total");
 
@@ -155,8 +165,8 @@ public class Sales extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(42, 42, 42)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 367, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(99, 99, 99)
                         .addComponent(jButton5)
@@ -187,7 +197,7 @@ public class Sales extends javax.swing.JFrame {
                                 .addComponent(jButton3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton6)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(100, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,7 +205,11 @@ public class Sales extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(totaltxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -217,10 +231,6 @@ public class Sales extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton3)
                             .addComponent(jButton6))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(totaltxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -255,10 +265,10 @@ public class Sales extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-  int price = Integer.parseInt(pricetxt.getText());
-  int qty = Integer.parseInt(quantitytxt.getText());
+  Double price = Double.valueOf(pricetxt.getText());
+  Double qty = Double.valueOf(quantitytxt.getText());
         
-  int tot = price * qty;
+  Double tot = price * qty;
         
         
   model = (DefaultTableModel)jTable1.getModel();
@@ -274,7 +284,7 @@ public class Sales extends javax.swing.JFrame {
                     
      int sum=0;
      int items = jTable1.getRowCount();
-     for(int i=0; i<jTable1.getRowCount(); i++)
+     for(int i=0; i<=jTable1.getRowCount(); i++)
        {            
          sum = sum + Integer.parseInt(jTable1.getValueAt(i, 4).toString());
                         
@@ -327,10 +337,43 @@ if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-           model.setRowCount(0);
+           
+           String tt = totaltxt.getText();
+           String z = "0";
+           String b = "";
+           
+           if (tt.equalsIgnoreCase(z) || tt.equalsIgnoreCase(b)){
+               JOptionPane.showMessageDialog(this, "No transaction detected");
+           }
+           else{
+               model.setRowCount(0);
+               ClearInput();
+               totaltxt.setText("");
+               SalePayout sp = new SalePayout();
+               sp.setVisible(true);
+           }
+           
       
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        ClearInput();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        ClearInput();
+        totaltxt.setText("");
+        int a = JOptionPane.showConfirmDialog(this, "Are you sure?");
+        if(a==JOptionPane.YES_OPTION){
+            ShiftEnd se = new ShiftEnd();
+            se.setVisible(true);
+            this.setVisible(false);
+        }
+        
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
