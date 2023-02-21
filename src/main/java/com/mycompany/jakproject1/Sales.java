@@ -39,6 +39,7 @@ public class Sales extends javax.swing.JFrame {
     }
     public Sales() {
         initComponents();
+        Connect();
     }
 
     Connection con;
