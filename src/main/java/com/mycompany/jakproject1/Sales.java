@@ -160,6 +160,12 @@ public class Sales extends javax.swing.JFrame {
             }
         });
 
+        quantitytxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantitytxtActionPerformed(evt);
+            }
+        });
+
         jButton3.setText("OK");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -425,6 +431,25 @@ public class Sales extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        
+        String input = quantitytxt.getText();
+    
+    // Check if input is valid
+    try {
+        int value = Integer.parseInt(input);
+        if (value < 0) {
+            JOptionPane.showMessageDialog(null, "Quantity cannot be less than 0");
+            quantitytxt.setText("");
+            return; // Return if input is invalid
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(null, "Quantity must be a number");
+        quantitytxt.setText("");
+        return; // Return if input is invalid
+    }
+    
+    // Continue with the rest of the button click event code
+    // ...
         String m = "";
         String n = "0";
         String q = quantitytxt.getText();
@@ -544,6 +569,27 @@ if(evt.getKeyCode() == KeyEvent.VK_ENTER)
         }
         
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void quantitytxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantitytxtActionPerformed
+        // TODO add your handling code here:
+        
+        String input = quantitytxt.getText();
+    if (input.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Please enter a quantity");
+        return;
+    }
+    try {
+        int value = Integer.parseInt(input);
+        if (value < 0) {
+            JOptionPane.showMessageDialog(null, "Quantity cannot be less than 0");
+            quantitytxt.setText("");
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(null, "Quantity must be a number");
+        quantitytxt.setText("");
+    }
+    
+    }//GEN-LAST:event_quantitytxtActionPerformed
 
     /**
      * @param args the command line arguments
