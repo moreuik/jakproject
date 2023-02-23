@@ -219,6 +219,12 @@ public class Sales extends javax.swing.JFrame {
 
         jButton3.setBackground(new java.awt.Color(51, 255, 0));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        quantitytxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantitytxtActionPerformed(evt);
+            }
+        });
+
         jButton3.setText("OK");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -635,6 +641,26 @@ if(evt.getKeyCode() == KeyEvent.VK_ENTER)
     private void barcodetxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barcodetxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_barcodetxtActionPerformed
+    private void quantitytxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantitytxtActionPerformed
+        // TODO add your handling code here:
+        
+        String input = quantitytxt.getText();
+    if (input.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Please enter a quantity");
+        return;
+    }
+    try {
+        int value = Integer.parseInt(input);
+        if (value < 0) {
+            JOptionPane.showMessageDialog(null, "Quantity cannot be less than 0");
+            quantitytxt.setText("");
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(null, "Quantity must be a number");
+        quantitytxt.setText("");
+    }
+    
+    }//GEN-LAST:event_quantitytxtActionPerformed
 
     /**
      * @param args the command line arguments
