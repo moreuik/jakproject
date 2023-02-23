@@ -1,0 +1,66 @@
+Connect();
+             pst = con.prepareStatement("select * from paytype where not(paytype=usd)");
+             rs = pst.executeQuery();
+                    model = (DefaultTableModel)jTable1.getModel();
+model.addRow(new Object[]
+    {
+      producttxt.getText(),
+      pricetxt.getText(),
+      quantitytxt.getText(),
+      tot
+                        
+    });   
+
+
+while(rs.next()==true)
+                    {
+                        Double rzwlcash = Double.valueOf(rs.getString("exchangerate"));
+                        Double recocash = Double.valueOf(rs.getString(""))
+                        
+                        String price = rs.getString("selling_price");
+  
+                        producttxt.setText(productname.trim());
+                        pricetxt.setText(price.trim());
+                    }
+                        
+         totusdtxt.setText(Double.toString(sum));
+         
+ 
+         barcodetxt.setText("");
+         producttxt.setText("");
+         pricetxt.setText("");
+         quantitytxt.setText("");
+        }
+ 
+ 
+                    
+  
+
+ model.addRow(new Object[]
+    {
+      producttxt.getText(),
+      pricetxt.getText(),
+      quantitytxt.getText(),
+      tot
+                        
+    });   
+
+
+
+totaltxt.setText("");
+
+
+
+Double sum5 = pric * rand;
+     Double sum6 = pric * zwlcash;
+     Double sum7 = pric * ecocash;
+     Double sum8 = pric * swipe;
+  
+                        producttxt.setText(productname.trim());
+                        pricetxt.setText(price.trim());
+                        
+                        randtottxt.setText(Double.toString(sum5));
+                        ecotottxt.setText(Double.toString(sum7));
+                        swipetottxt.setText(Double.toString(sum8));
+                        zwl.setText(Double.toString(sum5));
+
