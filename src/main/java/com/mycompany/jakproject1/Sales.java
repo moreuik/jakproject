@@ -110,10 +110,10 @@ public class Sales extends javax.swing.JFrame {
         randtxt = new javax.swing.JLabel();
         ecocashtxt = new javax.swing.JLabel();
         swipetxt = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(0, 255, 204));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setBackground(new java.awt.Color(0, 102, 102));
@@ -428,9 +428,6 @@ public class Sales extends javax.swing.JFrame {
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(346, 445, -1, -1));
 
-        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/jakproject1/WhatsApp Image 2023-02-08 at 17.33.21 2 (2).jpg"))); // NOI18N
-        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 700));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -441,9 +438,7 @@ public class Sales extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
         );
 
         pack();
@@ -672,7 +667,6 @@ if(evt.getKeyCode() == KeyEvent.VK_ENTER)
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
