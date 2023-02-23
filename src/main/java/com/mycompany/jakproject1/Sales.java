@@ -225,6 +225,12 @@ public class Sales extends javax.swing.JFrame {
             }
         });
 
+        quantitytxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantitytxtActionPerformed(evt);
+            }
+        });
+
         jButton3.setText("OK");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
