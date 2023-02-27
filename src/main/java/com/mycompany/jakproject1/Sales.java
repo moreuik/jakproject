@@ -5,13 +5,21 @@
 
 package com.mycompany.jakproject1;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Connection;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import java.util.*;
+import javax.swing.Timer;
 
 /**
  *
@@ -41,9 +49,74 @@ public class Sales extends javax.swing.JFrame {
    barcodetxt.requestFocus();
    barcodetxt.setText("");
     }
+    
+
+    
     public Sales() {
         initComponents();
         Connect();
+        
+        Thread t = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    long millis = System.currentTimeMillis();
+                    java.sql.Date sqlDate = new java.sql.Date(millis);
+                    java.util.Date utilDate = new java.util.Date(sqlDate.getTime());
+                    DateFormat dateFormat = new SimpleDateFormat("hh : mm : ss aa");
+                    SimpleDateFormat sd = new SimpleDateFormat("dd-mm-yyyy");
+                    final String stringDate = dateFormat.format(utilDate);
+                    final String daystr = sd.format(utilDate);
+                    timetxt.setText(stringDate);
+                    datetxt.setText(daystr);
+                    
+                    try{
+                        Thread.sleep(1);
+                    }
+                    
+                    catch(Exception e){
+                        
+                    }
+                }
+            }
+        };
+        
+        t.start();
+    }
+    
+    Sales(String user){
+        initComponents();
+        
+        Connect();
+        
+        Thread t = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    long millis = System.currentTimeMillis();
+                    java.sql.Date sqlDate = new java.sql.Date(millis);
+                    java.util.Date utilDate = new java.util.Date(sqlDate.getTime());
+                    DateFormat dateFormat = new SimpleDateFormat("hh : mm : ss aa");
+                    SimpleDateFormat sd = new SimpleDateFormat("dd-mm-yyyy");
+                    final String stringDate = dateFormat.format(utilDate);
+                    final String daystr = sd.format(utilDate);
+                    timetxt.setText(stringDate);
+                    datetxt.setText(daystr);
+                    
+                    try{
+                        Thread.sleep(1);
+                    }
+                    
+                    catch(Exception e){
+                        
+                    }
+                }
+            }
+        };
+        
+        t.start();
+        
+        usertxt.setText(user);
     }
 
     Connection con;
@@ -63,6 +136,9 @@ public class Sales extends javax.swing.JFrame {
       
     }
     
+    
+ 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -79,16 +155,6 @@ public class Sales extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        barcodetxt = new javax.swing.JTextField();
-        producttxt = new javax.swing.JTextField();
-        pricetxt = new javax.swing.JTextField();
-        quantitytxt = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -110,11 +176,25 @@ public class Sales extends javax.swing.JFrame {
         randtxt = new javax.swing.JLabel();
         ecocashtxt = new javax.swing.JLabel();
         swipetxt = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        barcodetxt = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        producttxt = new javax.swing.JTextField();
+        pricetxt = new javax.swing.JTextField();
+        quantitytxt = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        datetxt = new javax.swing.JLabel();
+        timetxt = new javax.swing.JLabel();
+        usertxt = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(0, 255, 204));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setBackground(new java.awt.Color(0, 102, 102));
         jTable1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -130,8 +210,6 @@ public class Sales extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(69, 6, 487, -1));
-
         jButton1.setBackground(new java.awt.Color(51, 255, 0));
         jButton1.setFont(new java.awt.Font("Verdana", 1, 20)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -142,21 +220,18 @@ public class Sales extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 650, 120, 46));
 
         jButton2.setBackground(new java.awt.Color(51, 255, 0));
         jButton2.setFont(new java.awt.Font("Verdana", 1, 20)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Purchases");
         jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 650, -1, 46));
 
         jButton4.setBackground(new java.awt.Color(51, 255, 0));
         jButton4.setFont(new java.awt.Font("Verdana", 1, 20)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Order In");
         jButton4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 650, 130, 46));
 
         jButton5.setFont(new java.awt.Font("Verdana", 3, 20)); // NOI18N
         jButton5.setForeground(new java.awt.Color(0, 102, 102));
@@ -166,93 +241,10 @@ public class Sales extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 650, -1, 46));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Barcode");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(662, 20, -1, -1));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Product");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(662, 78, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Price");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(662, 135, -1, -1));
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Quantity");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(662, 213, -1, -1));
-
-        barcodetxt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        barcodetxt.setForeground(new java.awt.Color(0, 102, 102));
-        barcodetxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                barcodetxtActionPerformed(evt);
-            }
-        });
-        barcodetxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                barcodetxtKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                barcodetxtKeyReleased(evt);
-            }
-        });
-        jPanel1.add(barcodetxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(809, 17, 114, -1));
-
-        producttxt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        producttxt.setForeground(new java.awt.Color(0, 102, 102));
-        jPanel1.add(producttxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(809, 75, 114, -1));
-
-        pricetxt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        pricetxt.setForeground(new java.awt.Color(0, 102, 102));
-        jPanel1.add(pricetxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(809, 132, 114, -1));
-
-        quantitytxt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        quantitytxt.setForeground(new java.awt.Color(0, 102, 102));
-        jPanel1.add(quantitytxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(809, 210, 114, -1));
-
-        jButton3.setBackground(new java.awt.Color(51, 255, 0));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        quantitytxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                quantitytxtActionPerformed(evt);
-            }
-        });
-
-        quantitytxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                quantitytxtActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("OK");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(662, 297, -1, -1));
-
-        jButton6.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(0, 102, 102));
-        jButton6.setText("Cancel");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(851, 297, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 91)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Total :");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 445, 270, 110));
 
         jPanel2.setBackground(new java.awt.Color(0, 102, 102));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -297,22 +289,16 @@ public class Sales extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(zwltottxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(swipetottxt, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(randtottxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
-                        .addComponent(ecotottxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(swipetottxt, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                    .addComponent(ecotottxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(randtottxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(zwltottxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -337,8 +323,6 @@ public class Sales extends javax.swing.JFrame {
                         .addContainerGap())
                     .addComponent(swipetottxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
-
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 430, -1, -1));
 
         jPanel3.setBackground(new java.awt.Color(0, 102, 102));
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -391,26 +375,18 @@ public class Sales extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(swipetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
-                        .addComponent(ecocashtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(randtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(totusdtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                            .addComponent(zwltxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(swipetxt, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                    .addComponent(ecocashtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(randtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(totusdtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(zwltxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -438,19 +414,217 @@ public class Sales extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(346, 445, -1, -1));
+        jPanel4.setBackground(new java.awt.Color(0, 102, 102));
+
+        barcodetxt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        barcodetxt.setForeground(new java.awt.Color(0, 102, 102));
+        barcodetxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barcodetxtActionPerformed(evt);
+            }
+        });
+        barcodetxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                barcodetxtKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                barcodetxtKeyReleased(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Barcode");
+
+        producttxt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        producttxt.setForeground(new java.awt.Color(0, 102, 102));
+
+        pricetxt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        pricetxt.setForeground(new java.awt.Color(0, 102, 102));
+
+        quantitytxt.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        quantitytxt.setForeground(new java.awt.Color(0, 102, 102));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Product");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Price");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Quantity");
+
+        jButton3.setBackground(new java.awt.Color(51, 255, 0));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton3.setText("OK");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(0, 102, 102));
+        jButton6.setText("Cancel");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                        .addComponent(barcodetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(producttxt, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(quantitytxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                            .addComponent(pricetxt, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton6)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(barcodetxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(producttxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pricetxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(35, 35, 35)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(quantitytxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton6))
+                .addContainerGap())
+        );
+
+        datetxt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        timetxt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        usertxt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(datetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38)
+                .addComponent(timetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 584, Short.MAX_VALUE)
+                .addComponent(usertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(datetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(timetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 7, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)
+                        .addComponent(jButton5))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 487, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(115, 115, 115)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(86, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(74, 74, 74)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(8, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1094, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -482,13 +656,17 @@ public class Sales extends javax.swing.JFrame {
     
     // Continue with the rest of the button click event code
     // ...
-        String m = "";
-        String n = "0";
+
         String q = quantitytxt.getText();
         int ck = Integer.parseInt(quantitytxt.getText());
-        if(q==null || ck<=0){
+        if( q.isEmpty()==true){
             JOptionPane.showMessageDialog(this, "Specify Quantity!");
         }
+        
+        else if(ck<=0){
+            JOptionPane.showMessageDialog(this, "Quantity must be greater than zero!");
+        }
+        
         else{
             Double price = Double.valueOf(pricetxt.getText());
   Double qty = Double.valueOf(quantitytxt.getText());
@@ -520,10 +698,38 @@ public class Sales extends javax.swing.JFrame {
          
      }
      
-     Double rand = 18.0;
-     Double zwlcash = 860.00;
-     Double ecocash = 875.00;
-     Double swipe = 875.00;
+     try {
+            Connect();
+            pst = con.prepareStatement("select * from paytype where not (pay_type = 'usd')");
+            rs = pst.executeQuery();
+            Double rand = 0.00;
+                Double zwlcash = 0.00;
+                Double swipe = 0.00;
+                Double ecocash = 0.00;
+            String rand3 = "rand";
+            String zwlcash3 = "zwl cash";
+            String ecocash3 = "ecocash";
+            String swipe3 = "swipe";
+            String results = "";
+                    
+                
+            while(rs.next())
+            {
+                results = rs.getString("pay_type");
+                if(results.equalsIgnoreCase(rand3)){
+                    rand = Double.valueOf(rs.getString("exchangerate"));
+                }
+                else if(results.equalsIgnoreCase(zwlcash3)){
+                    zwlcash = Double.valueOf(rs.getString("exchangerate"));
+                }
+                else if(results.equalsIgnoreCase(ecocash3)){
+                    ecocash = Double.valueOf(rs.getString("exchangerate"));
+                }
+                else if(results.equalsIgnoreCase(swipe3)){
+                    swipe = Double.valueOf(rs.getString("exchangerate"));
+                }    
+
+            }
      
      
      Double sum1 = sum * rand;
@@ -531,12 +737,11 @@ public class Sales extends javax.swing.JFrame {
      Double sum3 = sum * ecocash;
      Double sum4 = sum * swipe;
      
-            
      
      
      
+
      
-         
    totusdtxt.setText(Double.toString(sum));
    zwltxt.setText(Double.toString(sum2));
    randtxt.setText(Double.toString(sum1));
@@ -544,6 +749,10 @@ public class Sales extends javax.swing.JFrame {
    swipetxt.setText(Double.toString(sum4));
    
    ClearInput();
+        }
+        catch (SQLException ex) {
+                Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -553,48 +762,77 @@ public class Sales extends javax.swing.JFrame {
         
 if(evt.getKeyCode() == KeyEvent.VK_ENTER)
         {
-          String itemCode = barcodetxt.getText();
         try {
+            String itemCode = barcodetxt.getText();
             Connect();
-             pst = con.prepareStatement("select * from item where barcode=?");
-             pst.setString(1, itemCode);
-             rs = pst.executeQuery();
+            pst = con.prepareStatement("select * from paytype where not (pay_type = 'usd')");
+            rs = pst.executeQuery();
+            Double rand = 0.00;
+                Double zwlcash = 0.00;
+                Double swipe = 0.00;
+                Double ecocash = 0.00;
+            String rand2 = "rand";
+            String zwlcash2 = "zwl cash";
+            String ecocash2 = "ecocash";
+            String swipe2 = "swipe";
+            String results = "";
                     
-                    if(rs.next()==true)
-                    {
-                        String productname = rs.getString("itemname");
-                        String price = rs.getString("selling_price");
-                        
-                        Double pric = Double.valueOf(price);
-                        
-                        Double rand = 18.0;
-                        Double zwlcash = 860.00;
-                        Double ecocash = 875.00;
-                        Double swipe = 875.00;
-     
-     
-     Double sum5 = pric * rand;
-     Double sum6 = pric * zwlcash;
-     Double sum7 = pric * ecocash;
-     Double sum8 = pric * swipe;
-  
-                        producttxt.setText(productname.trim());
-                        pricetxt.setText(price.trim());
-                        
-                        randtottxt.setText(Double.toString(sum5));
-                        ecotottxt.setText(Double.toString(sum7));
-                        swipetottxt.setText(Double.toString(sum8));
-                        zwltottxt.setText(Double.toString(sum6));
-                        
-                        
-                    }
-                    else
-                    {
-                       JOptionPane.showMessageDialog(this,"Barcode not Found");
-                       ClearInput();
-                       
-                        
-                    }
+                
+            while(rs.next())
+            {
+                results = rs.getString("pay_type");
+                if(results.equalsIgnoreCase(rand2)){
+                    rand = Double.valueOf(rs.getString("exchangerate"));
+                }
+                else if(results.equalsIgnoreCase(zwlcash2)){
+                    zwlcash = Double.valueOf(rs.getString("exchangerate"));
+                }
+                else if(results.equalsIgnoreCase(ecocash2)){
+                    ecocash = Double.valueOf(rs.getString("exchangerate"));
+                }
+                else if(results.equalsIgnoreCase(swipe2)){
+                    swipe = Double.valueOf(rs.getString("exchangerate"));
+                }    
+
+            }
+            
+            try {
+                pst = con.prepareStatement("select * from item where barcode=?");
+                pst.setString(1, itemCode);
+                rs = pst.executeQuery();
+                
+                if(rs.next()==true)
+                {
+                    String productname = rs.getString("itemname");
+                    String price = rs.getString("selling_price");
+                    
+                    Double pric = Double.valueOf(price);
+                    
+                    Double sum5 = pric * rand;
+                    Double sum6 = pric * zwlcash;
+                    Double sum7 = pric * ecocash;
+                    Double sum8 = pric * swipe;
+                    
+                    producttxt.setText(productname.trim());
+                    pricetxt.setText(price.trim());
+                    
+                    randtottxt.setText(String.valueOf(sum5));
+                    ecotottxt.setText(String.valueOf(sum7));
+                    zwltottxt.setText(String.valueOf(sum6));
+                    swipetottxt.setText(String.valueOf(sum8));
+                }
+                
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Barcode not Found");
+                    ClearInput();
+                    
+                    
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -617,8 +855,14 @@ if(evt.getKeyCode() == KeyEvent.VK_ENTER)
                model.setRowCount(0);
                ClearInput();
                
-               SalePayout sp = new SalePayout();
-               sp.setVisible(true);        
+               String usd = totusdtxt.getText();
+               String zwl = zwltxt.getText();
+               String ecocash = ecocashtxt.getText();
+               String swipe = swipetxt.getText();
+               String rand = randtxt.getText();
+               String user = usertxt.getText();
+               new SalePayout(usd, zwl, ecocash, swipe, rand, user).setVisible(true);
+                     
                this.setVisible(false);
            }
            
@@ -706,6 +950,7 @@ if(evt.getKeyCode() == KeyEvent.VK_ENTER)
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barcodetxt;
+    private javax.swing.JLabel datetxt;
     private javax.swing.JLabel ecocashtxt;
     private javax.swing.JLabel ecotottxt;
     private javax.swing.JButton jButton1;
@@ -731,6 +976,8 @@ if(evt.getKeyCode() == KeyEvent.VK_ENTER)
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField pricetxt;
@@ -740,8 +987,11 @@ if(evt.getKeyCode() == KeyEvent.VK_ENTER)
     private javax.swing.JLabel randtxt;
     private javax.swing.JLabel swipetottxt;
     private javax.swing.JLabel swipetxt;
+    private javax.swing.JLabel timetxt;
     private javax.swing.JLabel totusdtxt;
+    private javax.swing.JLabel usertxt;
     private javax.swing.JLabel zwltottxt;
     private javax.swing.JLabel zwltxt;
     // End of variables declaration//GEN-END:variables
 }
+

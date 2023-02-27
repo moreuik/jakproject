@@ -1,0 +1,23 @@
+Double rand = 18.0;
+                        Double zwlcash = 860.00;
+                        Double ecocash = 875.00;
+                        Double swipe = 875.00;
+     
+     
+     Double sum5 = pric * rand;
+     Double sum6 = pric * zwlcash;
+     Double sum7 = pric * ecocash;
+     Double sum8 = pric * swipe;
+
+                        Double pric = Double.valueOf(price);
+
+ <repository>
+      <id>oss.sonatype.org-snapshot</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
