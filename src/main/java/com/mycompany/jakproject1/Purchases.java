@@ -16,6 +16,9 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
+import org.json.simple.JSONObject;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  *
@@ -37,11 +40,85 @@ public class Purchases extends javax.swing.JFrame {
         x6.setVisible(false);
         x7.setVisible(false);
         x8.setVisible(false);
+        x9.setVisible(false);
+        x10.setVisible(false);
         newcat.setVisible(false);
         catnew.setVisible(false);
         categorytxt.setVisible(false);
         catcombo.setVisible(false);
+        sprice.setVisible(false);
+        spricetxt.setVisible(false);
     }
+    
+    String s;
+    JWindow w;
+    
+    Purchases(String s, int x, int y)
+    {
+        w = new JWindow();
+  
+        // make the background transparent
+        w.setBackground(new Color(0, 0, 0, 0));
+  
+        // create a panel
+        JPanel p = new JPanel() {
+            @Override
+            public void paintComponent(Graphics g)
+            {
+                int wid = g.getFontMetrics().stringWidth(s);
+                int hei = g.getFontMetrics().getHeight();
+  
+                // draw the boundary of the toast and fill it
+                g.setColor(Color.black);
+                g.fillRect(10, 10, wid + 30, hei + 10);
+                g.setColor(Color.black);
+                g.drawRect(10, 10, wid + 30, hei + 10);
+                 
+                // set the color of text
+                g.setColor(new Color(255, 255, 255, 240));
+                g.drawString(s, 25, 27);
+                int t = 250;
+  
+                // draw the shadow of the toast
+                for (int i = 0; i < 4; i++) {
+                    t -= 60;
+                    g.setColor(new Color(0, 0, 0, t));
+                    g.drawRect(10 - i, 10 - i, wid + 30 + i * 2,
+                               hei + 10 + i * 2);
+                }
+            }
+        };
+  
+        w.add(p);
+        w.setLocation(x, y);
+        w.setSize(300, 100);
+    }
+    
+       // function to pop up the toast
+    void showtoast()
+    {
+        try {
+            w.setOpacity(1);
+            w.setVisible(true);
+  
+            // wait for some time
+            Thread.sleep(2000);
+  
+            // make the message disappear  slowly
+            for (double d = 1.0; d > 0.2; d -= 0.1) {
+                Thread.sleep(100);
+                w.setOpacity((float)d);
+            }
+  
+            // set the visibility to false
+            w.setVisible(false);
+                    }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+   
     
     Connection con;
     PreparedStatement pst;
@@ -108,9 +185,21 @@ public class Purchases extends javax.swing.JFrame {
         catnew = new javax.swing.JTextField();
         categorytxt = new javax.swing.JLabel();
         catcombo = new javax.swing.JComboBox<>();
+        spricetxt = new javax.swing.JLabel();
+        x9 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        bprice = new javax.swing.JTextField();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        sprice = new javax.swing.JTextField();
+        x10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        barcodetxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                barcodetxtActionPerformed(evt);
+            }
+        });
         barcodetxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 barcodetxtKeyPressed(evt);
@@ -160,6 +249,16 @@ public class Purchases extends javax.swing.JFrame {
         ecocashlable.setText("ECOCASH");
 
         swipelable.setText("SWIPE");
+
+        usdtxt.setText("0.00");
+
+        randtxt.setText("0.00");
+
+        zwltxt.setText("0.00");
+
+        ecocashtxt.setText("0.00");
+
+        swipetxt.setText("0.00");
 
         jLabel1.setText("Quantity");
 
@@ -229,14 +328,48 @@ public class Purchases extends javax.swing.JFrame {
             }
         });
 
+        spricetxt.setText("Selling Price");
+
+        x9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        x9.setForeground(new java.awt.Color(255, 0, 51));
+        x9.setText("X");
+
+        jLabel3.setText("USD Buying Price");
+
+        jCheckBox1.setText("Selling Price");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        sprice.setText("0.00");
+
+        x10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        x10.setForeground(new java.awt.Color(255, 0, 51));
+        x10.setText("X");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(jButton1)
+                .addGap(119, 119, 119)
+                .addComponent(jButton2)
+                .addGap(93, 93, 93)
+                .addComponent(jButton4)
+                .addGap(97, 97, 97)
+                .addComponent(jButton3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(166, 166, 166)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(166, 166, 166)
+                        .addComponent(jCheckBox1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(productlable)
                             .addComponent(barcodelable)
@@ -247,70 +380,74 @@ public class Purchases extends javax.swing.JFrame {
                             .addComponent(ecocashlable)
                             .addComponent(swipelable)
                             .addComponent(jLabel1)
-                            .addComponent(categorytxt))
+                            .addComponent(categorytxt)
+                            .addComponent(spricetxt)
+                            .addComponent(jLabel3))
                         .addGap(239, 239, 239)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(producttxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x0))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(quantitytxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x2)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(21, 21, 21)
-                                        .addComponent(catnew, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(newcat)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(combopay, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x3))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(usdtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x4))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(randtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x5))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(zwltxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x6))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(ecocashtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x7))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(swipetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x8))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(catcombo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(barcodetxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(x1)
-                                        .addGap(117, 117, 117)
-                                        .addComponent(newitem)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addComponent(jButton1)
-                        .addGap(117, 117, 117)
-                        .addComponent(jButton2)
-                        .addGap(86, 86, 86)
-                        .addComponent(jButton4)
-                        .addGap(61, 61, 61)
-                        .addComponent(jButton3)))
-                .addGap(97, 97, 97))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(combopay, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x3))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(randtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x5))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(zwltxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x6))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(ecocashtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x7))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                    .addComponent(catcombo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(barcodetxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x1)
+                                                .addGap(117, 117, 117)
+                                                .addComponent(newitem))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(swipetxt, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                                                    .addComponent(sprice))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(x8)
+                                                    .addComponent(x9))))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(producttxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x0))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(quantitytxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x2))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(usdtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x4)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(21, 21, 21)
+                                                .addComponent(catnew, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(newcat))))
+                                .addGap(97, 97, 97))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(bprice, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(x10)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,7 +478,12 @@ public class Purchases extends javax.swing.JFrame {
                                     .addComponent(jLabel1)
                                     .addComponent(quantitytxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(x2))
-                                .addGap(42, 42, 42)
+                                .addGap(11, 11, 11)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(bprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(x10))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(combopaylab))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(8, 8, 8)
@@ -374,13 +516,21 @@ public class Purchases extends javax.swing.JFrame {
                     .addComponent(swipelable)
                     .addComponent(swipetxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(x8))
-                .addGap(17, 17, 17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(spricetxt)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(x9)
+                        .addComponent(sprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addGap(67, 67, 67))
+                    .addComponent(jButton4)
+                    .addComponent(jButton3))
+                .addContainerGap())
         );
 
         pack();
@@ -413,6 +563,8 @@ public class Purchases extends javax.swing.JFrame {
         x6.setVisible(false);
         x7.setVisible(false);
         x8.setVisible(false);
+        x9.setVisible(false);
+        x10.setVisible(false);
         newcat.setVisible(false);
         catnew.setVisible(false);
         categorytxt.setVisible(false);
@@ -424,6 +576,7 @@ public class Purchases extends javax.swing.JFrame {
         zwltxt.setVisible(true);
         ecocashtxt.setVisible(true);
         swipetxt.setVisible(true);
+        
         
             
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -517,19 +670,31 @@ public class Purchases extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        try{
+        Purchases t = new Purchases("Purchase Successful.", 150, 590);
+        t.showtoast();
+        
+        
         barcodetxt.setText("");
         producttxt.setText("");
-        usdtxt.setText("");
-        randtxt.setText("");
-        zwltxt.setText("");
-        ecocashtxt.setText("");
-        swipetxt.setText("");
+        usdtxt.setText("0.00");
+        randtxt.setText("0.00");
+        zwltxt.setText("0.00");
+        ecocashtxt.setText("0.00");
+        swipetxt.setText("0.00");
         combopay.setSelectedIndex(0);
+        }
+        
+        catch(Exception e){
+            Purchases t = new Purchases("Purchase Failed.", 150, 400);
+        t.showtoast();
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Connect();
+        try{
+            
         String a1 = usdtxt.getText();
         String a2 = randtxt.getText();
         String a3 = zwltxt.getText();
@@ -538,8 +703,9 @@ public class Purchases extends javax.swing.JFrame {
         String a6 = barcodetxt.getText();
         String a7 = producttxt.getText();
         String a8 = quantitytxt.getText();
+        String a9 = bprice.getText();
         
-        if(a1.isBlank() && a2.isBlank() && a3.isBlank() && a4.isBlank() && a5.isBlank() && a6.isBlank() && a7.isBlank() && a8.isBlank() && combopay.getSelectedIndex()==0){
+        if(a1.isBlank() && a2.isBlank() && a3.isBlank() && a4.isBlank() && a5.isBlank() && (a6.isBlank() || a7.isBlank() || a8.isBlank() || a9.isBlank() || combopay.getSelectedIndex()==0)){
             x1.setVisible(true);
             x0.setVisible(true);
             x2.setVisible(true);
@@ -549,12 +715,11 @@ public class Purchases extends javax.swing.JFrame {
             x6.setVisible(true);
             x7.setVisible(true);
             x8.setVisible(true);
+            x9.setVisible(true);
+            x10.setVisible(true);
         }
         
-        else if(a6.isBlank() || Double.parseDouble(a6)<=0){
-            x1.setVisible(true);
-        }
-        else if(a7.isBlank() || Double.parseDouble(a7)<=0){
+        else if(a7.isBlank()){
             x0.setVisible(true);
         }
         else if(combopay.getSelectedItem() == ""){
@@ -578,80 +743,21 @@ public class Purchases extends javax.swing.JFrame {
         else if((a5.isBlank() || Double.parseDouble(a5)<=0) && combopay.getSelectedItem()=="SWIPE"){
             x8.setVisible(true);
         }
-        else if((a1.isBlank() || Double.parseDouble(a1)<=0 || a2.isBlank() || Double.parseDouble(a2)<=0 || a3.isBlank() || Double.parseDouble(a3)<=0 || a4.isBlank() || Double.parseDouble(a4)<=0 || a5.isBlank() || Double.parseDouble(a5)<=0) && combopay.getSelectedItem()=="MIXED"){
-            x4.setVisible(true);
-            x5.setVisible(true);
-            x6.setVisible(true);
-            x7.setVisible(true);
-            x8.setVisible(true);
-        }
         
         else{
-            if(newitem.isSelected()){
-                if(newcat.isSelected()){
-                    Connect();
-                    String id1 = "c";
-                    String id2 = dtf.format(now);
-                    id1 = id1 + id2;
-                    String catname = catnew.getText();
-                    
-                     
-                     if(catnew.getText().isBlank()){
-                         JOptionPane.showMessageDialog(this,"Please type in category.");
-                     }
-                     else{
-                        try {
-                            pst = con.prepareStatement("insert into category (categoryid, categoryname) VALUES (?, ?)");
-                            pst.setString(1, id1);
-                            pst.setString(2, catname);
-                            rs = pst.executeQuery();
-                            
-                            
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Purchases.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                     }
-                    
-                     Connect();
-                     
-                }
-                else{
-                    
-                }
-            }
             
-            
-        
-            
-            
-            try {
-                String itemCode = barcodetxt.getText();
-                pst = con.prepareStatement("select * from item where barcode=?");
-                pst.setString(1, itemCode);
-                rs = pst.executeQuery();
-                
-                if(rs.next()==true)
-                {
-                    String productname = rs.getString("itemname");
-                    
- 
-                    
-                    producttxt.setText(productname.trim());
-                    
-                }
-
-                String pid = dtf.format(now);
-                pst = con.prepareStatement("insert into purchases (purchaseid, pitemid, barcode, quantity, amountpaid) VALUES (?, ?, ?, ?, ?)");
-                pst.setString(1, pid);
-               
-                rs = pst.executeQuery();
-            } catch (SQLException ex) {
-                Logger.getLogger(Purchases.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+        Purchases t = new Purchases("Purchase Successful.", 150, 590);
+        t.showtoast();
+        Sales s = new Sales();
+        s.setVisible(true);
+        this.setVisible(false);
+        }
         }
         
-        
+        catch(Exception e){
+            Purchases t = new Purchases("Purchase Failed.", 150, 400);
+        t.showtoast();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void barcodetxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barcodetxtKeyPressed
@@ -752,6 +858,19 @@ public class Purchases extends javax.swing.JFrame {
 
     }//GEN-LAST:event_catcomboActionPerformed
 
+    private void barcodetxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_barcodetxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_barcodetxtActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+        if(jCheckBox1.isSelected()){
+            sprice.setVisible(true);
+            
+        
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -791,6 +910,7 @@ public class Purchases extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel barcodelable;
     private javax.swing.JTextField barcodetxt;
+    private javax.swing.JTextField bprice;
     private javax.swing.JComboBox<String> catcombo;
     private javax.swing.JLabel categorytxt;
     private javax.swing.JTextField catnew;
@@ -802,7 +922,9 @@ public class Purchases extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JCheckBox newcat;
     private javax.swing.JCheckBox newitem;
     private javax.swing.JLabel productlable;
@@ -810,12 +932,15 @@ public class Purchases extends javax.swing.JFrame {
     private javax.swing.JTextField quantitytxt;
     private javax.swing.JLabel randlable;
     private javax.swing.JTextField randtxt;
+    private javax.swing.JTextField sprice;
+    private javax.swing.JLabel spricetxt;
     private javax.swing.JLabel swipelable;
     private javax.swing.JTextField swipetxt;
     private javax.swing.JLabel usdlable;
     private javax.swing.JTextField usdtxt;
     private javax.swing.JLabel x0;
     private javax.swing.JLabel x1;
+    private javax.swing.JLabel x10;
     private javax.swing.JLabel x2;
     private javax.swing.JLabel x3;
     private javax.swing.JLabel x4;
@@ -823,6 +948,7 @@ public class Purchases extends javax.swing.JFrame {
     private javax.swing.JLabel x6;
     private javax.swing.JLabel x7;
     private javax.swing.JLabel x8;
+    private javax.swing.JLabel x9;
     private javax.swing.JLabel zwllable;
     private javax.swing.JTextField zwltxt;
     // End of variables declaration//GEN-END:variables

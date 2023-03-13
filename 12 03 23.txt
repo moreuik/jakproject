@@ -1,0 +1,54 @@
+com.github.anastaciocintra
+escpos-coffee
+4.1.0
+
+
+escpos.write(27).write(112).write(48).write(55).write(121);
+
+
+The identification of evidence is difficult to the extent that for certain cases investigators do not even know the location of the data or where to begin with the search as it is distributed among many hosts in multiple data centres. The availability of system statutes and log files depends on the cloud service model. This process is not feasible in SaaS and PaaS models as the client has limited access. But in the IaaS model it is partially applicable as the client has access to the Virtual Machine which behaves like an actual machine.
+
+
+    private final TableModel dataModel = new AbstractTableModel() {
+
+        @Override
+        public int getColumnCount() { 
+            return 5; 
+        }
+
+        @Override
+        public int getRowCount() { 
+            return 10;
+        }
+
+        @Override
+        public Object getValueAt(int row, int col) { 
+            return new Integer(row*col); 
+        }
+        private final JTable table = new JTable(dataModel);
+        
+        @Override
+        public void setValueAt(Object value, int row, int col) {
+            Object[][] rowData = null;
+    rowData[row][col] = value;
+    fireTableCellUpdated(row, col);
+  }
+        
+        @Override
+    public boolean isCellEditable(int row, int col)
+      { return true; }
+};
+
+
+
+
+	Volatile data
+When services lose power, volatile data cannot sustain and when a VM is turned off or restarted, all data will be lost unless the image is stored somewhere. Unfortunately Cloud Service Providers do not provide much persistent storage to the client hence volatile data that resides within the virtual environment such as temporary internet files and registry entry files will likely be lost when clients restart their machines.
+	Lack control of the system
+Customers have limited access and control at all level within the cloud environment and have no knowledge on where the data is physically located. Standard practice in digital forensic investigations call for physical acquisition of devices or technological gadgets which is not possible in this case. Investigators have to get vital information fro resources that are abstracted in order to accurately understand the environment including the cloud architecture, hardware, and file system to mention a few.
+
+	Dependence on cloud forensics providers
+Investigators and clients are heavily dependent on the Cloud Service Providers in collecting the digital evidence from the cloud computing environment as they have limited control on the system. This presents issues of the Cloud Service Providers’ trust and evidence integrityThe cloud service providers are prevented from providing the desired forensic evidence because:
+-	the sheeer volume of data and users within the cloud environment result in a limited amount of backups which causes problems when recovering deleted data or overwritten data deleted by another user.
+-	In the case of incidences, cloud service providers focus on restoring the service rather than preserving the evidence and handling it in a forensically sound manner. Some cloud service providers may not report incidences or cooperate in an investigation for fear of potential damage on their reputation.
+-	Location uncertainty of the data makes the response time to an evidence discovery request extremely challenging.

@@ -1,0 +1,631 @@
+pst.setString(4, quantitytxt.getText());
+
+                String pid = dtf.format(now);
+                pst = con.prepareStatement("insert into purchases (purchaseid, pitemid, barcode, quantity, amountpaid) VALUES (?, ?, ?, ?, ?)");
+                pst.setString(1, pid);
+                pst.setStr
+               
+                int r = pst.executeUpdate();
+                
+
+
+
+
+     try{
+        Connect();
+        String a1 = usdtxt.getText();
+        String a2 = randtxt.getText();
+        String a3 = zwltxt.getText();
+        String a4 = ecocashtxt.getText();
+        String a5 = swipetxt.getText();
+        String a6 = barcodetxt.getText();
+        String a7 = producttxt.getText();
+        String a8 = quantitytxt.getText();
+        
+        if(a1.isBlank() && a2.isBlank() && a3.isBlank() && a4.isBlank() && a5.isBlank() && a6.isBlank() && a7.isBlank() && a8.isBlank() && combopay.getSelectedIndex()==0){
+            x1.setVisible(true);
+            x0.setVisible(true);
+            x2.setVisible(true);
+            x3.setVisible(true);
+            x4.setVisible(true);
+            x5.setVisible(true);
+            x6.setVisible(true);
+            x7.setVisible(true);
+            x8.setVisible(true);
+        }
+        
+        
+        else if((a1.isBlank() || Double.parseDouble(a1)<=0 || a2.isBlank() || Double.parseDouble(a2)<=0 || a3.isBlank() || Double.parseDouble(a3)<=0 || a4.isBlank() || Double.parseDouble(a4)<=0 || a5.isBlank() || Double.parseDouble(a5)<=0) && combopay.getSelectedItem()=="MIXED"){
+            x4.setVisible(true);
+            x5.setVisible(true);
+            x6.setVisible(true);
+            x7.setVisible(true);
+            x8.setVisible(true);
+        }
+        
+        else{
+            if(newitem.isSelected()){
+                if(newcat.isSelected()){
+                    Connect();
+                    String id1 = "c";
+                    String id2 = dtf.format(now);
+                    id1 = id1 + id2;
+                    String catname = catnew.getText();
+                    String id3 = "item";
+                    id3 = id3 + id2;
+                    Double sellingp = 0.0;
+                    Double m = 0.0;
+                    String m2 = "loc1";
+                    String id4 = "purchase";
+                    id4 = id4 + id2;
+                    String prodid = "";
+                    
+                    JSONObject obj=new JSONObject();    
+                    obj.put("usd", usdtxt.getText());    
+                    obj.put("zwl cash", zwltxt.getText());    
+                    obj.put("ecocash", ecocashtxt.getText());
+                    obj.put("swipe", swipetxt.getText());
+                    obj.put("rand", randtxt.getText());
+                        
+                    
+                    String itemCode = barcodetxt.getText();
+                pst = con.prepareStatement("select * from item where barcode=?");
+                pst.setString(1, itemCode);
+                rs = pst.executeQuery();
+                
+                if(rs.next()==true)
+                {
+                    prodid = rs.getString("pitemid");
+                    
+                    
+                }
+                    
+                    
+                    pst = con.prepareStatement("SELECT * FROM price_calculation ORDER BY calculationid DESC");
+                    rs = pst.executeQuery();
+                     
+                    if(rs.next()==true){
+                        m=Double.valueOf(rs.getString("multiplyby"));
+                    }
+                    
+                    sellingp = m * Double.valueOf(bprice.getText());
+                    
+                     if(catnew.getText().isBlank()){
+                         JOptionPane.showMessageDialog(this,"Please type in category.");
+                     }
+                     else{
+                        
+                            pst = con.prepareStatement("insert into category (categoryid, categoryname) VALUES (?, ?)");
+                            pst.setString(1, id1);
+                            pst.setString(2, catname);
+                            rs = pst.executeQuery();
+                            
+                            pst = con.prepareStatement("insert into item (itemid, itemname, selling_price, category, barcode, quantity, locationid) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                            pst.setString(1, id3);
+                            pst.setString(2, producttxt.getText());
+                            pst.setString(3, String.valueOf(sellingp));
+                            pst.setString(4, catnew.getText());
+                            pst.setString(5, barcodetxt.getText());
+                            pst.setString(6, quantitytxt.getText());
+                            pst.setString(8, m2);
+                            rs = pst.executeQuery();
+                            
+                            pst = con.prepareStatement("insert into purchases (purchaseid, pitemid, barcode, quantity, amountpaid) VALUES (?, ?, ?, ?, ?)");
+                            pst.setString(1, id4);
+                            pst.setString(2, prodid);
+                            pst.setString(3, barcodetxt.getText());
+                            pst.setInt(4, 5);
+                            
+                            pst.setString(5, obj.toString());
+                            rs = pst.executeQuery();
+                        
+                     }
+                    
+                     Connect();
+                     
+                }
+                else{
+                    
+                }
+            }
+            
+            
+        
+            
+            
+            
+                String itemCode = barcodetxt.getText();
+                pst = con.prepareStatement("select * from item where barcode=?");
+                pst.setString(1, itemCode);
+                rs = pst.executeQuery();
+                
+                if(rs.next()==true)
+                {
+                    String productname = rs.getString("itemname");
+                    
+ 
+                    
+                    producttxt.setText(productname.trim());
+                    
+                }
+
+                
+                String id1 = "c";
+                    String id2 = dtf.format(now);
+                    id1 = id1 + id2;
+                    String catname = catnew.getText();
+                    String id3 = "item";
+                    id3 = id3 + id2;
+                    Double sellingp = 0.0;
+                    Double m = 0.0;
+                    String m2 = "loc1";
+                    String id4 = "purchase";
+                    id4 = id4 + id2;
+                    String prodid = "";
+                    
+                    JSONObject obj=new JSONObject();    
+                    obj.put("usd", usdtxt.getText());    
+                    obj.put("zwl cash", zwltxt.getText());    
+                    obj.put("ecocash", ecocashtxt.getText());
+                    obj.put("swipe", swipetxt.getText());
+                    obj.put("rand", randtxt.getText());
+                
+                pst = con.prepareStatement("insert into category (categoryid, categoryname) VALUES (?, ?)");
+                            pst.setString(1, id1);
+                            pst.setString(2, catname);
+                            int r;
+            r = pst.executeUpdate();
+                            
+
+                            
+                            pst = con.prepareStatement("insert into purchases (purchaseid, pitemid, barcode, quantity, amountpaid) VALUES (?, ?, ?, ?, ?)");
+                            pst.setString(1, id4);
+                            pst.setString(2, prodid);
+                            pst.setString(3, barcodetxt.getText());
+                            pst.setInt(4, 5);
+                            
+                            pst.setString(5, obj.toString());
+                            r = pst.executeUpdate();
+             
+            
+        }
+        }catch(SQLException ex) {
+                Logger.getLogger(Purchases.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+
+
+
+<dependency>
+            <groupId>jackson</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+
+
+<dependency>
+            <groupId>jasper</groupId>
+            <artifactId>jasperreports-javaflow</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+<dependency>
+            <groupId>jasper</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>6.20.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jasper</groupId>
+            <artifactId>jcommon</artifactId>
+            <version>1.0.23</version>
+        </dependency>
+        <dependency>
+            <groupId>jasper</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.19</version>
+        </dependency>
+        <dependency>
+            <groupId>jasper</groupId>
+            <artifactId>stax2-api</artifactId>
+            <version>4.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jasper</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>6.2.7</version>
+        </dependency>
+
+<dependency>
+            <groupId>jackson</groupId>
+            <artifactId>bcutil-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>commons-digester</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>ecj</artifactId>
+            <version>3.21.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.1.7.js10</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.13.3</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.13.3</version>
+        </dependency>
+        <dependency>
+            <groupId>jackson</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.13.3</version>
+        </dependency>
+        
+
+toolkit
+adaptor
+***charge head
+
+
+
+
+        public List<String> getPrinters(){
+
+        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+        PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+
+        PrintService printServices[] = PrintServiceLookup.lookupPrintServices(
+                flavor, pras);
+
+        List<String> printerList = new ArrayList<>();
+        for(PrintService printerService: printServices){
+            printerList.add( printerService.getName());
+        }
+
+        return printerList;
+    }
+        
+    public int print(Graphics g, PageFormat pf, int page)
+            throws PrinterException {
+        if (page > 0) { /* We have only one page, and 'page' is zero-based */
+            return NO_SUCH_PAGE;
+        }
+
+        /*
+         * User (0,0) is typically outside the imageable area, so we must
+         * translate by the X and Y values in the PageFormat to avoid clipping
+         */
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.translate(pf.getImageableX(), pf.getImageableY());
+        /* Now we perform our rendering */
+
+        g.setFont(new Font("Roman", 0, 8));
+        g.drawString("Hello world !", 0, 10);
+
+        return PAGE_EXISTS;
+    }
+    
+    public void printString(String printerName, String text) {
+
+        // find the printService of name printerName
+        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+        PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+
+        PrintService printService[] = PrintServiceLookup.lookupPrintServices(
+                flavor, pras);
+        PrintService service = findPrintService(printerName, printService);
+
+        DocPrintJob job = service.createPrintJob();
+
+        try {
+
+            byte[] bytes;
+
+            // important for umlaut chars
+            bytes = text.getBytes("CP437");
+
+            Doc doc = new SimpleDoc(bytes, flavor, null);
+            
+                   job.print(doc, null);
+
+        } catch (UnsupportedEncodingException | PrintException e) {
+            // TODO Auto-generated catch block
+
+        }
+
+    }
+    
+    
+    public void printBytes(String printerName, byte[] bytes) {
+
+        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+        PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+
+        PrintService printService[] = PrintServiceLookup.lookupPrintServices(
+                flavor, pras);
+        PrintService service = findPrintService(printerName, printService);
+
+        DocPrintJob job = service.createPrintJob();
+
+        try {
+
+            Doc doc = new SimpleDoc(bytes, flavor, null);
+
+            job.print(doc, null);
+
+        } catch (PrintException e) {
+        }
+    }
+    
+    private PrintService findPrintService(String printerName, PrintService[] services) {
+        for (PrintService service : services) {
+            if (service.getName().equalsIgnoreCase(printerName)) {
+                return service;
+            }
+        }
+
+        return null;
+    }
+
+
+        
+        PrintService printerService = new PrintService();
+
+        System.out.println(printerService.getPrinters());
+
+        //print some stuff. Change the printer name to your thermal printer name.
+        printerService.printString("EPSON-TM-T20II", "\n\n testing testing 1 2 3eeeee \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+        // cut that paper!
+        byte[] cutP = new byte[] { 0x1d, 'V', 1 };
+
+        printerService.printBytes("EPSON-TM-T20II", cutP);
+
+
+
+
+
+        public void setPrintJob(DocPrintJob job) {
+  // Add a listener to the print job
+  job.addPrintJobListener(
+      new PrintJobAdapter() {
+        @Override
+        public void printJobCanceled(PrintJobEvent printJobEvent) {
+          allDone();
+        }
+        @Override
+        public void printJobCompleted(PrintJobEvent printJobEvent) {
+          allDone();
+        }
+        @Override
+        public void printJobFailed(PrintJobEvent printJobEvent) {
+          allDone();
+        }
+        @Override
+        public void printJobNoMoreEvents(PrintJobEvent printJobEvent) {
+          allDone();
+        }
+        void allDone() {
+          synchronized (PrintJobWatcher.this) {
+            boolean done = true;
+            PrintJobWatcher.this.notify();
+          }
+        }
+      });
+}
+
+
+
+        public class PrintJobWatcher {
+    // true if it is safe to close the print job's input stream
+    private boolean done = false;
+
+    public PrintJobWatcher() {
+
+    }
+
+    public PrintJobWatcher(DocPrintJob job) {
+        setPrintJob(job);
+    }
+
+    public void setPrintJob(DocPrintJob job) {
+        // Add a listener to the print job
+        job.addPrintJobListener(
+                new PrintJobAdapter() {
+                    @Override
+                    public void printJobCanceled(PrintJobEvent printJobEvent) {
+                        allDone();
+                    }
+
+                    @Override
+                    public void printJobCompleted(PrintJobEvent printJobEvent) {
+                        allDone();
+                    }
+
+                    @Override
+                    public void printJobFailed(PrintJobEvent printJobEvent) {
+                        allDone();
+                    }
+
+                    @Override
+                    public void printJobNoMoreEvents(PrintJobEvent printJobEvent) {
+                        allDone();
+                    }
+
+                    void allDone() {
+                        synchronized (PrintJobWatcher.this) {
+                            done = true;
+                            PrintJobWatcher.this.notify();
+                        }
+                    }
+                });
+    }
+
+    public synchronized void waitForDone() {
+        try {
+            while (!done) {
+                wait();
+            }
+        } catch (InterruptedException e) {
+        }
+    }
+}
+
+
+        <dependency>
+	<groupId>org.icepdf.os</groupId>
+	<artifactId>icepdf-viewer</artifactId>
+	<version>6.1.3</version>
+        </dependency>
+        <!-- Thanks for using https://jar-download.com -->
+
+
+
+
+
+<dependency>
+            <groupId>jackson</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.13.3</version>
+        </dependency>
+
+txtarea.setText(txtarea.getText() + "Product    Price\n");
+  for (int i = 0; i < tableModel.getRowCount(); i++)
+  {
+    String product = (String) tableModel.getValueAt(i, 0);
+    String price = (String) tableModel.getValueAt(i, 1);
+    txtarea.setText(txtarea.getText() + product + "    " + price + "\n");
+  }
+
+
+
+//APPROACH - 1 : Using getScreenSize() method
+        Toolkit tk=Toolkit.getDefaultToolkit(); //Initializing the Toolkit class.
+        Dimension screenSize = tk.getScreenSize(); //Get the Screen resolution of our device.
+        s.setSize(screenSize.width,screenSize.height); //Set the width and height of the JFrame.
+
+
+
+
+
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+
+
+
+p.setText("Qty \tItem\t\t\tUnit\tTotal");
+p.newLine();
+p.addLineSeperator();
+p.newLine();
+
+for(int i=0; i<jTable1.getRowCount(); i++){
+    p.setText(jTable1.getValueAt(i, 2).toString() + "\t" + jTable1.getValueAt(i, 0).toString() + "\t" +  jTable1.getValueAt(i, 1).toString() + "\t" + jTable1.getValueAt(i, 3).toString());
+    p.newLine();
+}
+
+
+p.setText(fmt.toString());
+
+p.newLine();
+
+p.setText("USD Total \t\t\t\t" + usd1txt.getText());
+p.newLine();
+
+
+if((usd>0.00) && (zwl==0.00) && (rand==0.00) && (ecocash==0.00) && (swipe==0.00)){
+    p.setText("USD Amount Paid \t\t\t");
+}
+
+else if((usd==0.00) && (zwl>0.00) && (rand==0.00) && (ecocash==0.00) && (swipe==0.00)){
+    fmt.format("\n%-5s %-25s %-7s %-7s\n", "ZWL Amount Paid", "", "", zwl1txt.getText());
+    p.setText(fmt.toString());
+}
+else if((usd==0.00) && (zwl>0.00) && (rand==0.00) && (ecocash==0.00) && (swipe==0.00)){
+    fmt.format("\n%-5s %-25s %-7s %-7s\n", "ZWL Amount Paid", "", "", zwl1txt.getText());
+    p.setText(fmt.toString());
+}
+else if((usd==0.00) && (zwl>0.00) && (rand==0.00) && (ecocash==0.00) && (swipe==0.00)){
+    fmt.format("\n%-5s %-25s %-7s %-7s\n", "ZWL Amount Paid", "", "", zwl1txt.getText());
+    p.setText(fmt.toString());
+}
+else if((usd==0.00) && (zwl>0.00) && (rand==0.00) && (ecocash==0.00) && (swipe==0.00)){
+    fmt.format("\n%-5s %-25s %-7s %-7s\n", "ZWL Amount Paid", "", "", zwl1txt.getText());
+    p.setText(fmt.toString());
+}
+
+                    ActionListener usdlis = (ActionListener)jTextField1;
+                    ActionListener zwllis = (ActionListener)jTextField2;
+                    ActionListener randlis = (ActionListener)jTextField3;
+                    ActionListener ecolis = (ActionListener)jTextField4;
+                    ActionListener swipelis = (ActionListener)jTextField5;
+
+
+                    
+                    jTextField1.addActionListener((ActionListener) this);
+                    jTextField2.addActionListener((ActionListener) this);
+                    jTextField3.addActionListener((ActionListener) this);
+                    jTextField4.addActionListener((ActionListener) this);
+                    jTextField5.addActionListener((ActionListener) this);
+  
+
+
+springboot
+jsp
+html + css       
+
+
+
+75 x 23
+
+
+
+
+for (int i=0; i<jTable1.getRowCount(); i++) 
+{
+fmt.format("%-5s %-25s %-7s %-7s\n", jTable1.getValueAt(i, 2).toString(), jTable1.getValueAt(i, 0).toString(), jTable1.getValueAt(i, 1).toString(), jTable1.getValueAt(i, 3).toString());
+}
+fmt.format(p.addLineSeperator());
+fmt.format("\n%-5s %-25s %-7s %-7s\n", "USD Total", "", "", totusdtxt.getText());
+
+       
+       

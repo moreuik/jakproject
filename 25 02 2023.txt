@@ -21,3 +21,79 @@ Double rand = 18.0;
         <enabled>true</enabled>
       </snapshots>
     </repository>
+
+
+               SalePayout sp = new SalePayout();
+               sp.setVisible(true);  
+
+   String type;
+  SimpleDateFormat sdf;
+ 
+  public void ClockLabel(String type) {
+    this.type = type;
+    
+ 
+    sdf = switch (type) {
+            case "date" -> new SimpleDateFormat("  MMMM dd yyyy");
+            case "time" -> new SimpleDateFormat("hh:mm:ss a");
+            case "day" -> new SimpleDateFormat("EEEE  ");
+            default -> new SimpleDateFormat();
+        };
+ 
+    Timer t = new Timer(1000, (ActionListener) this);
+    t.start();
+  }
+ 
+  public void actionPerformed(ActionEvent ae) {
+    Date d = new Date();
+    setText(sdf.format(d));
+  }
+    
+
+
+
+
+Home ho = new Home();
+                ho.setVisible(true);
+
+        Sales s = new Sales();
+        s.setVisible(true);
+
+
+
+ pst.setString(2, );
+
+
+try {
+                String itemCode = barcodetxt.getText();
+                pst = con.prepareStatement("select * from item where barcode=?");
+                pst.setString(1, itemCode);
+                rs = pst.executeQuery();
+                
+                if(rs.next()==true)
+                {
+                    String productname = rs.getString("itemname");
+                    
+ 
+                    
+                    producttxt.setText(productname.trim());
+                    
+                }
+                
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Barcode not Found");
+                    
+                    
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+                        catcombo.addItem(cate[b]);
+
+
+
+catch (SQLException ex) {
+                Logger.getLogger(Purchases.class.getName()).log(Level.SEVERE, null, ex);
+            }

@@ -7,6 +7,46 @@ package com.mycompany.jakproject1;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import static java.awt.print.Printable.NO_SUCH_PAGE;
+import static java.awt.print.Printable.PAGE_EXISTS;
+import java.awt.print.PrinterException;
+import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.AttributeSet;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.HashPrintServiceAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.PrinterName;
+import javax.print.event.PrintJobAdapter;
+import javax.print.event.PrintJobEvent;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import org.icepdf.ri.common.PrintJobWatcher;
+
+
 
 /**
  *
@@ -50,7 +90,7 @@ public class SalePayout extends javax.swing.JFrame {
         t.start();
     }
         
-        SalePayout(String usd, String zwl, String ecocash, String swipe, String rand, String user) {
+        SalePayout(String usd, String zwl, String ecocash, String swipe, String rand, String user, TableModel tableModel) {
         initComponents();
         
         Thread t = new Thread(){
@@ -66,6 +106,8 @@ public class SalePayout extends javax.swing.JFrame {
                     final String daystr = sd.format(utilDate);
                     timetxt.setText(stringDate);
                     datetxt.setText(daystr);
+                    
+                    
                     
                     try{
                         Thread.sleep(1);
@@ -88,7 +130,267 @@ public class SalePayout extends javax.swing.JFrame {
         usertxt.setText(user);
         
     }
+        
+        
     
+        public class PrinterOptions {
+    String commandSet = "";
+
+    public String initialize() {
+        final byte[] Init = {27, 64};
+        commandSet += new String(Init);
+        return new String(Init);
+    }
+
+    public String chooseFont(int Options) {
+        String s = "";
+        final byte[] ChooseFontA = {27, 77, 0};
+        final byte[] ChooseFontB = {27, 77, 1};
+        final byte[] ChooseFontC = {27, 77, 48};
+        final byte[] ChooseFontD = {27, 77, 49};
+        
+                switch(Options) {
+            case 1:
+            s = new String(ChooseFontA);
+            break;
+
+            case 2:
+            s = new String(ChooseFontB);
+            break;
+
+            case 3:
+            s = new String(ChooseFontC);
+            break;
+
+            case 4:
+            s = new String(ChooseFontD);
+            break;
+
+            default:
+            s = new String(ChooseFontB);
+        }
+        commandSet += s;
+        return new String(s);
+    }
+    
+        public String feedBack(byte lines) {
+        final byte[] Feed = {27,101,lines};
+        String s = new String(Feed);
+        commandSet += s;
+        return s;
+    }
+
+    public String feed(byte lines) {
+        final byte[] Feed = {27,100,lines};
+        String s = new String(Feed);
+        commandSet += s;
+        return s;
+    }
+
+    public String alignLeft() {
+        final byte[] AlignLeft = {27, 97,48};
+        String s = new String(AlignLeft);
+        commandSet += s;
+        return s;
+    }
+
+        public String alignCenter() {
+        final byte[] AlignCenter = {27, 97,49};
+        String s = new String(AlignCenter);
+        commandSet += s;
+        return s;
+    }
+
+    public String alignRight() {
+        final byte[] AlignRight = {27, 97,50};
+        String s = new String(AlignRight);
+        commandSet += s;
+        return s;
+    }
+
+    public String newLine() {
+        final  byte[] LF = {10};
+        String s = new String(LF);
+        commandSet += s;
+        return s;
+   }
+
+   public String reverseColorMode(boolean enabled) {
+        final byte[] ReverseModeColorOn = {29, 66, 1};
+        final byte[] ReverseModeColorOff = {29, 66, 0};
+
+        String s = "";
+        if(enabled)
+            s = new String(ReverseModeColorOn);
+        else
+            s = new String(ReverseModeColorOff);
+
+        commandSet += s;
+        return s;
+    } 
+
+    public String doubleStrik(boolean enabled) {
+        final byte[] DoubleStrikeModeOn = {27, 71, 1};
+        final byte[] DoubleStrikeModeOff = {27, 71, 0};
+
+        String s="";
+        if(enabled)
+            s = new String(DoubleStrikeModeOn);
+        else
+            s = new String(DoubleStrikeModeOff);
+
+        commandSet += s;
+        return s;
+    } 
+
+    public String doubleHeight(boolean enabled) {
+        final byte[] DoubleHeight = {27, 33, 17};
+        final byte[] UnDoubleHeight={27, 33, 0};
+
+        String s = "";
+        if(enabled)
+            s = new String(DoubleHeight);
+        else
+            s = new String(UnDoubleHeight);
+
+        commandSet += s;
+        return s;
+    }
+    
+        public String emphasized(boolean enabled) {
+        final byte[] EmphasizedOff={27 ,0};
+        final byte[] EmphasizedOn={27 ,1};
+
+        String s="";
+        if(enabled)
+            s = new String(EmphasizedOn);
+        else
+            s = new String(EmphasizedOff);
+
+        commandSet += s;
+        return s;
+    } 
+
+    public String underLine(int Options) {
+        final byte[] UnderLine2Dot = {27, 45, 50};
+        final byte[] UnderLine1Dot = {27, 45, 49};
+        final byte[] NoUnderLine = {27, 45, 48};
+
+        String s = "";
+        switch(Options) {
+            case 0:
+            s = new String(NoUnderLine);
+            break;
+
+            case 1:
+            s = new String(UnderLine1Dot);
+            break;
+
+            default:
+            s = new String(UnderLine2Dot);
+        }
+        commandSet += s;
+        return new String(s);
+    }
+
+    public String color(int Options) {
+        final byte[] ColorRed = {27, 114, 49};
+        final byte[] ColorBlack = {27, 114, 48};
+
+        String s = "";
+        switch(Options) {
+            case 0:
+            s = new String(ColorBlack);
+            break;
+
+            case 1:
+            s = new String(ColorRed);
+            break;
+
+            default:
+            s = new String(ColorBlack);
+        }
+        commandSet += s;
+        return s;
+    }
+
+    public String finit() {
+        final byte[] FeedAndCut = {29, 'V', 66, 0};
+
+        String s = new String(FeedAndCut);
+
+        final byte[] DrawerKick={27,70,0,60,120};   
+        s += new String(DrawerKick);
+
+        commandSet+=s;
+        return s;
+    }
+
+    public String addLineSeperator() {
+        String lineSpace = "---------------------------------------------";
+        commandSet += lineSpace;
+        return lineSpace;
+    }
+
+    public void resetAll() {
+        commandSet = "";
+    }
+
+    public void setText(String s) {
+        commandSet+=s;
+    }
+
+    public String finalCommandSet() {
+        return commandSet;
+    }
+}
+        
+        private static boolean feedPrinter(byte[] b) {
+    try {       
+        AttributeSet attrSet = new HashPrintServiceAttributeSet(new PrinterName("EPSON TM-T20III Receipt", null)); //EPSON TM-U220 ReceiptE4
+
+        DocPrintJob job = PrintServiceLookup.lookupPrintServices(null, attrSet)[0].createPrintJob();       
+        //PrintServiceLookup.lookupDefaultPrintService().createPrintJob();  
+
+        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
+        Doc doc = new SimpleDoc(b, flavor, null);
+        PrintJobWatcher pjDone = new PrintJobWatcher(job);
+
+        job.print(doc, null);
+        pjDone.waitForDone();
+        System.out.println("Done !");
+    } catch (javax.print.PrintException pex) {
+        System.out.println("Printer Error " + pex.getMessage());
+        return false;
+    } catch(Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+    return true;
+}
+        
+    Connection con;
+    PreparedStatement pst;
+    ResultSet rs;
+    DefaultTableModel model = new DefaultTableModel();
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd  HH:mm");  
+                LocalDateTime now = LocalDateTime.now();
+    
+    public final void Connect()
+    {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+             con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/jak_database","root","admin");
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+    }
+        
+        
+
+        
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -134,6 +436,8 @@ public class SalePayout extends javax.swing.JFrame {
         datetxt = new javax.swing.JLabel();
         timetxt = new javax.swing.JLabel();
         usertxt = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -153,22 +457,21 @@ public class SalePayout extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(157, 157, 157)
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(157, 157, 157)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel13))
-                        .addGap(165, 165, 165)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(163, Short.MAX_VALUE))
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(212, 212, 212))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -271,39 +574,48 @@ public class SalePayout extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(34, 34, 34)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(usd1txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jRadioButton1)
+                        .addComponent(jButton3)))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton2)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(zwl1txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jRadioButton2)
+                        .addComponent(jButton4)))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton3)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rand1txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jRadioButton3)
+                        .addComponent(jButton5)))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton4)
-                    .addComponent(eco1txt, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(eco1txt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jRadioButton4)
+                        .addComponent(jButton6)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jRadioButton5)
                     .addComponent(swipe1txt, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton7))
-                .addGap(214, 214, 214))
+                .addContainerGap())
         );
 
         jButton1.setText("PAYOUT");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("CANCEL");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -318,35 +630,56 @@ public class SalePayout extends javax.swing.JFrame {
 
         usertxt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(datetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(44, 44, 44)
                         .addComponent(timetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(123, 123, 123)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(161, 161, 161)
                         .addComponent(usertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47))))
+                        .addGap(47, 47, 47))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -373,6 +706,61 @@ public class SalePayout extends javax.swing.JFrame {
         this.setVisible(false);
         
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+        String datex = dtf.format(now);
+        
+                
+        PrinterOptions p=new PrinterOptions();
+
+p.resetAll();
+p.initialize();
+p.feedBack((byte)2);
+p.color(0);
+p.alignCenter();
+p.setText("JAK PROJECTS");
+p.newLine();
+p.setText("Bulawayo \n\n");
+p.newLine();
+
+p.setText(datex);
+p.newLine();
+p.setText(usertxt.getText());
+p.newLine();
+p.newLine();
+p.addLineSeperator();
+p.newLine();
+
+
+p.setText("Qty \tItem\t\t\tUnit\tTotal");
+p.newLine();
+p.addLineSeperator();
+p.newLine();
+
+
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+p.setText("1" + "\t" + "Aliens Everywhere" + "\t" +  "Rats" + "\t" + "500");
+p.newLine();
+
+p.addLineSeperator();
+p.feed((byte)3);
+p.finit();
+
+feedPrinter(p.finalCommandSet().getBytes());
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -431,6 +819,8 @@ public class SalePayout extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;

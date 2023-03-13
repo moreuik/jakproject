@@ -112,7 +112,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Cancel");
+        jButton2.setText("Clear");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -182,6 +182,7 @@ public class Login extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         passwordtxt.setText("");
+        passcheck.setSelected(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -215,8 +216,10 @@ public class Login extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+ 
     private void passcheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passcheckActionPerformed
         // TODO add your handling code here:
+
         if(passcheck.isSelected()){
             passwordtxt.setEchoChar((char)0);
         }
