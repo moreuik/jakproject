@@ -1,0 +1,72 @@
+striking
+register
+
+printerOutputStream.close();
+finally {
+                try {
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+                DateTimeFormatter dtf4 = DateTimeFormatter.ofPattern("hh:mm:ssaa");
+
+
+                String y = objdesc.toString();
+                String y2 = objtot.toString();
+                String y3 = objpay.toString();
+                String y4 = objchan.toString();
+                
+                System.out.println(y);
+                System.out.println(y2);
+                System.out.println(y3);
+                System.out.println(y4);
+		
+
+
+breakages table
+
+ALTER TABLE `jak_database`.`theoretical_stock` 
+ADD COLUMN `17/03/2023` INT NOT NULL AFTER `21_02_2023`;
+
+
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '1');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '10');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '11');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '12');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '13');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '2');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '3');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '4');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '5');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '6');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '7');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '8');
+UPDATE `jak_database`.`theoretical_stock` SET `17/03/2023` = '100' WHERE (`stockitemid` = '9');
+
+
+ALTER TABLE `jak_database`.`theoretical_stock` 
+ADD COLUMN `16/03/2023` INT NOT NULL AFTER `21_02_2023`;
+UPDATE `jak_database`.`theoretical_stock` 
+SET `16/03/2023` = `21_02_2023`;
+
+
+pst.setString(1, datest);
+                    pst.setInt(2, stoc);
+                    pst.setString(3, itemid);
+
+		
+INSERT INTO `jak_database`.`store` (`storeid`, `storelicence`, `storeaddress`, `storename`, `city`, `country`) VALUES ('1m', 'nnjjin', 'jjkn', 'jnkk', 'jnkl', 'ijk');
+
+
+
+
+
+
+
+vpvjt5
+8ty7c9
+
+
+

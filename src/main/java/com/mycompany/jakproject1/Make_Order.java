@@ -6,13 +6,27 @@ package com.mycompany.jakproject1;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JWindow;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -31,6 +45,41 @@ public class Make_Order extends javax.swing.JFrame {
         
         model.addRow(rowData);
         
+    }
+    
+    Make_Order(String user){
+        initComponents();
+        
+        
+        
+        Thread t = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    long millis = System.currentTimeMillis();
+                    java.sql.Date sqlDate = new java.sql.Date(millis);
+                    java.util.Date utilDate = new java.util.Date(sqlDate.getTime());
+                    DateFormat dateFormat = new SimpleDateFormat("hh : mm : ss aa");
+                    SimpleDateFormat sd = new SimpleDateFormat("dd-mm-yyyy");
+                    final String stringDate = dateFormat.format(utilDate);
+                    final String daystr = sd.format(utilDate);
+                    timetxt.setText(stringDate);
+                    datetxt.setText(daystr);
+                    
+                    try{
+                        Thread.sleep(1);
+                    }
+                    
+                    catch(Exception e){
+                        
+                    }
+                }
+            }
+        };
+        
+        t.start();
+        
+        usertxt.setText(user);
     }
     
     String s;
@@ -100,6 +149,32 @@ public class Make_Order extends javax.swing.JFrame {
             System.out.println(e.getMessage());
         }
     }
+    
+    public final void Connect()
+    {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+             con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/jak_database","root","admin");
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+    }
+    
+    Connection con;
+    PreparedStatement pst;
+    ResultSet rs;
+    DefaultTableModel model = new DefaultTableModel();
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd  HH:mm");  
+                LocalDateTime now = LocalDateTime.now();
+                private static final DecimalFormat decfors = new DecimalFormat("0.00");
+                
+                DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                
+                DateTimeFormatter dtf3 = DateTimeFormatter.ofPattern("HH:mm:ss");
+                
+                DateTimeFormatter dtf4 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
 
@@ -120,6 +195,7 @@ public class Make_Order extends javax.swing.JFrame {
         datetxt = new javax.swing.JLabel();
         timetxt = new javax.swing.JLabel();
         usertxt = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -165,8 +241,6 @@ public class Make_Order extends javax.swing.JFrame {
         jTable1.setCellSelectionEnabled(true);
         jTable1.setRowHeight(25);
         jTable1.setShowGrid(true);
-        jTable1.setShowHorizontalLines(true);
-        jTable1.setShowVerticalLines(true);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jTable1MouseEntered(evt);
@@ -192,12 +266,21 @@ public class Make_Order extends javax.swing.JFrame {
 
         usertxt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jButton3.setText("add rows");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addGap(35, 35, 35)
                 .addComponent(jButton2)
@@ -225,7 +308,8 @@ public class Make_Order extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap())
         );
 
@@ -246,7 +330,7 @@ public class Make_Order extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         
-DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+model = (DefaultTableModel) jTable1.getModel();
 
 
 model.setRowCount(0);
@@ -260,12 +344,58 @@ this.setVisible(false);
         // TODO add your handling code here:
 
         try{
+            
+            Connect();
+            
+                String ordid = "ord";
+                ordid = ordid + dtf2.format(now) + dtf3.format(now);    
+                                    
+                    String date1 = dtf4.format(now);
+                    String time1 = dtf3.format(now);
+                    
+                    JSONArray arritem = new JSONArray();
+                    JSONArray arrquan = new JSONArray();
+                     for (int j=0; j<jTable1.getRowCount(); j++){
+                        if(jTable1.getValueAt(j, 0)==null && jTable1.getValueAt(j, 1)==null){
+                            
+                        }
+                        else{
+                        arritem.add(jTable1.getValueAt(j, 0));
+                        arrquan.add(jTable1.getValueAt(j, 1));
+                        }
+                     }
+                     
+                     String loc = "loc1";
+                     
+                     String state = "pending";
+                     
+                     String usernamee = "";
+                pst = con.prepareStatement("select * from user where username = ?");
+                pst.setString(1, usertxt.getText());
+                rs = pst.executeQuery();
+                
+                if(rs.next()==true){
+                    usernamee = rs.getString("userid");
+                }
+                
+                    
+                    pst = con.prepareStatement("INSERT INTO order_placed (`orderid`, `date`, `time`, `items`, `quantities`, `order_location`, `orderstate`, `cashier_user`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+                    pst.setString(1, ordid);
+                    pst.setString(2, date1);
+                    pst.setString(3, time1);
+                    pst.setString(4, arritem.toString());
+                    pst.setString(5, arrquan.toString());
+                    pst.setString(6, loc);
+                    pst.setString(7, state);
+                    pst.setString(8, usernamee);
+                    pst.executeUpdate();
+            
             Make_Order t = new Make_Order("Order placed.", 205, 590);
             t.showtoast();
             this.setVisible(false);
         }
 
-        catch(Exception e){
+        catch(SQLException e){
             Make_Order t = new Make_Order("Order placement failed.", 205, 400);
             t.showtoast();
         }
@@ -276,6 +406,22 @@ this.setVisible(false);
         
         
     }//GEN-LAST:event_jTable1KeyPressed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        
+        String num = javax.swing.JOptionPane.showInputDialog("How many rows?");
+        
+        
+        for(int i=0; i<Integer.parseInt(num.trim()); i++){
+         model = (DefaultTableModel) jTable1.getModel();
+        Object rowData = null;
+        
+        model.addRow((Object[]) rowData);
+        }
+        
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -315,6 +461,7 @@ this.setVisible(false);
     private javax.swing.JLabel datetxt;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel timetxt;

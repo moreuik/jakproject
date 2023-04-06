@@ -19,6 +19,8 @@ import javax.swing.*;
 import org.json.simple.JSONObject;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -48,6 +50,41 @@ public class Purchases extends javax.swing.JFrame {
         catcombo.setVisible(false);
         sprice.setVisible(false);
         spricetxt.setVisible(false);
+    }
+    
+            Purchases(String user){
+        initComponents();
+        
+        Connect();
+        
+        Thread t = new Thread(){
+            @Override
+            public void run(){
+                while(true){
+                    long millis = System.currentTimeMillis();
+                    java.sql.Date sqlDate = new java.sql.Date(millis);
+                    java.util.Date utilDate = new java.util.Date(sqlDate.getTime());
+                    DateFormat dateFormat = new SimpleDateFormat("hh : mm : ss aa");
+                    SimpleDateFormat sd = new SimpleDateFormat("dd-mm-yyyy");
+                    final String stringDate = dateFormat.format(utilDate);
+                    final String daystr = sd.format(utilDate);
+                    timetxt.setText(stringDate);
+                    datetxt.setText(daystr);
+                    
+                    try{
+                        Thread.sleep(1);
+                    }
+                    
+                    catch(Exception e){
+                        
+                    }
+                }
+            }
+        };
+        
+        t.start();
+        
+        usertxt.setText(user);
     }
     
     String s;
@@ -139,6 +176,41 @@ public class Purchases extends javax.swing.JFrame {
         }
       
     }
+    
+    public final void Clear(){
+        barcodetxt.setText("");
+        producttxt.setText("");
+        quantitytxt.setText("");
+        bprice.setText("0.00");
+        usdtxt.setText("0.00");
+        randtxt.setText("0.00");
+        zwltxt.setText("0.00");
+        ecocashtxt.setText("0.00");
+        swipetxt.setText("0.00");
+        combopay.setSelectedIndex(0);
+        x1.setVisible(false);
+        x0.setVisible(false);
+        x2.setVisible(false);
+        x3.setVisible(false);
+        x4.setVisible(false);
+        x5.setVisible(false);
+        x6.setVisible(false);
+        x7.setVisible(false);
+        x8.setVisible(false);
+        x9.setVisible(false);
+        x10.setVisible(false);
+        newcat.setVisible(false);
+        catnew.setVisible(false);
+        categorytxt.setVisible(false);
+        catcombo.setVisible(false);
+        newitem.setSelected(false);
+        newcat.setSelected(false);
+        usdtxt.setVisible(true);
+        randtxt.setVisible(true);
+        zwltxt.setVisible(true);
+        ecocashtxt.setVisible(true);
+        swipetxt.setVisible(true);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -192,6 +264,9 @@ public class Purchases extends javax.swing.JFrame {
         jCheckBox1 = new javax.swing.JCheckBox();
         sprice = new javax.swing.JTextField();
         x10 = new javax.swing.JLabel();
+        datetxt = new javax.swing.JLabel();
+        timetxt = new javax.swing.JLabel();
+        usertxt = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -203,6 +278,9 @@ public class Purchases extends javax.swing.JFrame {
         barcodetxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 barcodetxtKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                barcodetxtKeyReleased(evt);
             }
         });
 
@@ -231,6 +309,12 @@ public class Purchases extends javax.swing.JFrame {
 
         barcodelable.setText("Product");
 
+        producttxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                producttxtKeyReleased(evt);
+            }
+        });
+
         combopaylab.setText("Paytype used");
 
         combopay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "      ", "USD", "RAND", "ZWL CASH", "ECOCASH", "SWIPE", "MIXED" }));
@@ -251,16 +335,47 @@ public class Purchases extends javax.swing.JFrame {
         swipelable.setText("SWIPE");
 
         usdtxt.setText("0.00");
+        usdtxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                usdtxtKeyReleased(evt);
+            }
+        });
 
         randtxt.setText("0.00");
+        randtxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                randtxtKeyReleased(evt);
+            }
+        });
 
         zwltxt.setText("0.00");
+        zwltxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                zwltxtKeyReleased(evt);
+            }
+        });
 
         ecocashtxt.setText("0.00");
+        ecocashtxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ecocashtxtKeyReleased(evt);
+            }
+        });
 
         swipetxt.setText("0.00");
+        swipetxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                swipetxtKeyReleased(evt);
+            }
+        });
 
         jLabel1.setText("Quantity");
+
+        quantitytxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                quantitytxtKeyReleased(evt);
+            }
+        });
 
         jButton4.setText("Next");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -336,6 +451,12 @@ public class Purchases extends javax.swing.JFrame {
 
         jLabel3.setText("USD Buying Price");
 
+        bprice.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                bpriceKeyReleased(evt);
+            }
+        });
+
         jCheckBox1.setText("Selling Price");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -344,49 +465,63 @@ public class Purchases extends javax.swing.JFrame {
         });
 
         sprice.setText("0.00");
+        sprice.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                spriceKeyReleased(evt);
+            }
+        });
 
         x10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         x10.setForeground(new java.awt.Color(255, 0, 51));
         x10.setText("X");
+
+        datetxt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        timetxt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        usertxt.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(jButton1)
-                .addGap(119, 119, 119)
-                .addComponent(jButton2)
-                .addGap(93, 93, 93)
-                .addComponent(jButton4)
-                .addGap(97, 97, 97)
-                .addComponent(jButton3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(166, 166, 166)
+                .addGap(365, 365, 365)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jCheckBox1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(productlable)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1)
                             .addComponent(barcodelable)
+                            .addComponent(productlable)
                             .addComponent(combopaylab)
                             .addComponent(usdlable)
                             .addComponent(randlable)
                             .addComponent(zwllable)
                             .addComponent(ecocashlable)
                             .addComponent(swipelable)
-                            .addComponent(jLabel1)
                             .addComponent(categorytxt)
-                            .addComponent(spricetxt)
-                            .addComponent(jLabel3))
-                        .addGap(239, 239, 239)
+                            .addComponent(spricetxt))
+                        .addGap(40, 40, 40)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(producttxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x0))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(quantitytxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x2))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(usdtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(x4)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
+                                        .addComponent(catnew, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
@@ -420,77 +555,79 @@ public class Purchases extends javax.swing.JFrame {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(x8)
-                                                    .addComponent(x9))))
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(x9)))
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(producttxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(x0))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(quantitytxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(x2))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(usdtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(x4)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(21, 21, 21)
-                                                .addComponent(catnew, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(newcat))))
+                                                .addGap(382, 382, 382)
+                                                .addComponent(newcat)))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
                                 .addGap(97, 97, 97))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(bprice, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(x10)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(datetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(38, 38, 38)
+                                .addComponent(timetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(116, 116, 116)
+                                .addComponent(usertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addGap(119, 119, 119)
+                                .addComponent(jButton2)
+                                .addGap(93, 93, 93)
+                                .addComponent(jButton4)
+                                .addGap(97, 97, 97)
+                                .addComponent(jButton3))
+                            .addComponent(jCheckBox1))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(datetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(timetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(categorytxt)
-                    .addComponent(catcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(catcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(categorytxt))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(barcodetxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(x1)
+                    .addComponent(newitem)
+                    .addComponent(productlable))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(barcodelable)
+                    .addComponent(producttxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(x0)
+                    .addComponent(newcat))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(barcodetxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(x1)
-                                .addComponent(newitem))
-                            .addComponent(productlable))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(barcodelable)
-                            .addComponent(producttxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(x0)
-                            .addComponent(newcat))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel1)
-                                    .addComponent(quantitytxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(x2))
-                                .addGap(11, 11, 11)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel3)
-                                    .addComponent(bprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(x10))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(combopaylab))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(catnew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(combopay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(x3)))
+                            .addComponent(jLabel1)
+                            .addComponent(quantitytxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(x2))
+                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(bprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(x10)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(catnew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(combopay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(x3)
+                    .addComponent(combopaylab))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(usdlable)
@@ -519,12 +656,11 @@ public class Purchases extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(spricetxt)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(x9)
-                        .addComponent(sprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(x9)
+                    .addComponent(sprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spricetxt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
@@ -538,45 +674,14 @@ public class Purchases extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        Sales s = new Sales();
-            s.setVisible(true);
+        
             this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        barcodetxt.setText("");
-        producttxt.setText("");
-        quantitytxt.setText("");
-        usdtxt.setText("");
-        randtxt.setText("");
-        zwltxt.setText("");
-        ecocashtxt.setText("");
-        swipetxt.setText("");
-        combopay.setSelectedIndex(0);
-        x1.setVisible(false);
-        x0.setVisible(false);
-        x2.setVisible(false);
-        x3.setVisible(false);
-        x4.setVisible(false);
-        x5.setVisible(false);
-        x6.setVisible(false);
-        x7.setVisible(false);
-        x8.setVisible(false);
-        x9.setVisible(false);
-        x10.setVisible(false);
-        newcat.setVisible(false);
-        catnew.setVisible(false);
-        categorytxt.setVisible(false);
-        catcombo.setVisible(false);
-        newitem.setSelected(false);
-        newcat.setSelected(false);
-        usdtxt.setVisible(true);
-        randtxt.setVisible(true);
-        zwltxt.setVisible(true);
-        ecocashtxt.setVisible(true);
-        swipetxt.setVisible(true);
         
+        Clear();
         
             
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -584,6 +689,7 @@ public class Purchases extends javax.swing.JFrame {
     private void combopayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combopayActionPerformed
         // TODO add your handling code here:
         if (combopay.getSelectedItem() == "USD"){
+            usdtxt.setVisible(true);
             randtxt.setVisible(false);
             zwltxt.setVisible(false);
             ecocashtxt.setVisible(false);
@@ -675,14 +781,7 @@ public class Purchases extends javax.swing.JFrame {
         t.showtoast();
         
         
-        barcodetxt.setText("");
-        producttxt.setText("");
-        usdtxt.setText("0.00");
-        randtxt.setText("0.00");
-        zwltxt.setText("0.00");
-        ecocashtxt.setText("0.00");
-        swipetxt.setText("0.00");
-        combopay.setSelectedIndex(0);
+        Clear();
         }
         
         catch(Exception e){
@@ -695,52 +794,49 @@ public class Purchases extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
             
-        String a1 = usdtxt.getText();
-        String a2 = randtxt.getText();
-        String a3 = zwltxt.getText();
-        String a4 = ecocashtxt.getText();
-        String a5 = swipetxt.getText();
-        String a6 = barcodetxt.getText();
-        String a7 = producttxt.getText();
-        String a8 = quantitytxt.getText();
-        String a9 = bprice.getText();
+        String a1 = usdtxt.getText().trim();
+        String a2 = randtxt.getText().trim();
+        String a3 = zwltxt.getText().trim();
+        String a4 = ecocashtxt.getText().trim();
+        String a5 = swipetxt.getText().trim();
+        String a6 = barcodetxt.getText().trim();
+        String a7 = producttxt.getText().trim();
+        String a8 = quantitytxt.getText().trim();
+        String a9 = bprice.getText().trim();
         
-        if(a1.isBlank() && a2.isBlank() && a3.isBlank() && a4.isBlank() && a5.isBlank() && (a6.isBlank() || a7.isBlank() || a8.isBlank() || a9.isBlank() || combopay.getSelectedIndex()==0)){
+        if((a6.isBlank() && a7.isBlank() && a8.isBlank() && a9.isBlank() && combopay.getSelectedIndex()==0)){
             x1.setVisible(true);
             x0.setVisible(true);
             x2.setVisible(true);
             x3.setVisible(true);
-            x4.setVisible(true);
-            x5.setVisible(true);
-            x6.setVisible(true);
-            x7.setVisible(true);
-            x8.setVisible(true);
-            x9.setVisible(true);
             x10.setVisible(true);
         }
         
         else if(a7.isBlank()){
             x0.setVisible(true);
         }
-        else if(combopay.getSelectedItem() == ""){
+        else if(combopay.getSelectedIndex() == 0){
             x3.setVisible(true);
         }
-        else if(a8.isBlank() || Double.parseDouble(a8)<=0){
+        else if(a8.isBlank() || Double.parseDouble(a8)<=0.00){
             x2.setVisible(true);
         }
-        else if((a1.isBlank() || Double.parseDouble(a1)<=0) && combopay.getSelectedItem()=="USD"){
+        else if(a9.isBlank() || Double.parseDouble(a9)<=0.00){
+            x2.setVisible(true);
+        }
+        else if((a1.isBlank() || Double.parseDouble(a1)<=0.00) && combopay.getSelectedItem()=="USD"){
             x4.setVisible(true);
         }
-        else if((a2.isBlank() || Double.parseDouble(a2)<=0) && combopay.getSelectedItem()=="RAND"){
+        else if((a2.isBlank() || Double.parseDouble(a2)<=0.00) && combopay.getSelectedItem()=="RAND"){
             x5.setVisible(true);
         }
-        else if((a3.isBlank() || Double.parseDouble(a3)<=0) && combopay.getSelectedItem()=="ZWL CASH"){
+        else if((a3.isBlank() || Double.parseDouble(a3)<=0.00) && combopay.getSelectedItem()=="ZWL CASH"){
             x6.setVisible(true);
         }
-        else if((a4.isBlank() || Double.parseDouble(a4)<=0) && combopay.getSelectedItem()=="ECOCASH"){
+        else if((a4.isBlank() || Double.parseDouble(a4)<=0.00) && combopay.getSelectedItem()=="ECOCASH"){
             x7.setVisible(true);
         }
-        else if((a5.isBlank() || Double.parseDouble(a5)<=0) && combopay.getSelectedItem()=="SWIPE"){
+        else if((a5.isBlank() || Double.parseDouble(a5)<=0.00) && combopay.getSelectedItem()=="SWIPE"){
             x8.setVisible(true);
         }
         
@@ -748,13 +844,13 @@ public class Purchases extends javax.swing.JFrame {
             
         Purchases t = new Purchases("Purchase Successful.", 150, 590);
         t.showtoast();
-        Sales s = new Sales();
-        s.setVisible(true);
+        Sales sal = new Sales();
+        sal.setVisible(true);
         this.setVisible(false);
         }
         }
         
-        catch(Exception e){
+        catch(NumberFormatException e){
             Purchases t = new Purchases("Purchase Failed.", 150, 400);
         t.showtoast();
         }
@@ -786,23 +882,12 @@ public class Purchases extends javax.swing.JFrame {
     }//GEN-LAST:event_barcodetxtKeyPressed
 
     private void newitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newitemActionPerformed
-        // TODO add your handling code here:
-        
-        boolean isChecked = newitem.isSelected();
         
         
-        categorytxt.setVisible(true);
+        
 
-        if(newitem.isSelected()){
-                    catcombo.setVisible(true);
-                          categorytxt.setVisible(true);
-            newcat.setVisible(true);
-            if(newcat.isSelected()){
-                        categorytxt.setVisible(true);
-        catcombo.setVisible(true);
-                catnew.setVisible(true);
-            }
-            else{
+// TODO add your handling code here:
+
                 try {
                     Connect();
                     pst = con.prepareStatement("select count(categoryname) from category");
@@ -826,7 +911,7 @@ public class Purchases extends javax.swing.JFrame {
                         b++;
                     }
                     
-                    catcombo = new JComboBox(cate);
+
                     
                     
                     categorytxt.setVisible(true);
@@ -834,12 +919,23 @@ public class Purchases extends javax.swing.JFrame {
                 } catch (SQLException ex) {
                     Logger.getLogger(Purchases.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+                if(newitem.isSelected()){
+                    catcombo.setVisible(true);
+                          categorytxt.setVisible(true);
+            newcat.setVisible(true);
+            if(newcat.isSelected()){
+                        categorytxt.setVisible(true);
+        
+                catnew.setVisible(true);
             }
+
         } else {
+            catcombo.setVisible(false);
          newcat.setVisible(false);
         catnew.setVisible(false);
         categorytxt.setVisible(false);
-        catcombo.setVisible(false);
+        
         }
             
 
@@ -851,6 +947,11 @@ public class Purchases extends javax.swing.JFrame {
             catnew.setVisible(true);
             categorytxt.setVisible(false);
         catcombo.setVisible(false);
+        }
+        else{
+            catnew.setVisible(false);
+            categorytxt.setVisible(true);
+            catcombo.setVisible(true);
         }
     }//GEN-LAST:event_newcatActionPerformed
 
@@ -865,11 +966,64 @@ public class Purchases extends javax.swing.JFrame {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if(jCheckBox1.isSelected()){
+            spricetxt.setVisible(true);
             sprice.setVisible(true);
-            
-        
+        }
+        else{
+            sprice.setVisible(false);
+            spricetxt.setVisible(false);
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void barcodetxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_barcodetxtKeyReleased
+        // TODO add your handling code here:
+        x1.setVisible(false);
+    }//GEN-LAST:event_barcodetxtKeyReleased
+
+    private void producttxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_producttxtKeyReleased
+        // TODO add your handling code here:
+        x0.setVisible(false);
+    }//GEN-LAST:event_producttxtKeyReleased
+
+    private void quantitytxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantitytxtKeyReleased
+        // TODO add your handling code here:
+        x2.setVisible(false);
+    }//GEN-LAST:event_quantitytxtKeyReleased
+
+    private void bpriceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bpriceKeyReleased
+        // TODO add your handling code here:
+        x10.setVisible(false);
+    }//GEN-LAST:event_bpriceKeyReleased
+
+    private void usdtxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usdtxtKeyReleased
+        // TODO add your handling code here:
+        x4.setVisible(false);
+    }//GEN-LAST:event_usdtxtKeyReleased
+
+    private void randtxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_randtxtKeyReleased
+        // TODO add your handling code here:
+        x5.setVisible(false);
+    }//GEN-LAST:event_randtxtKeyReleased
+
+    private void zwltxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_zwltxtKeyReleased
+        // TODO add your handling code here:
+        x6.setVisible(false);
+    }//GEN-LAST:event_zwltxtKeyReleased
+
+    private void ecocashtxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ecocashtxtKeyReleased
+        // TODO add your handling code here:
+        x7.setVisible(false);
+    }//GEN-LAST:event_ecocashtxtKeyReleased
+
+    private void swipetxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_swipetxtKeyReleased
+        // TODO add your handling code here:
+        x8.setVisible(false);
+    }//GEN-LAST:event_swipetxtKeyReleased
+
+    private void spriceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spriceKeyReleased
+        // TODO add your handling code here:
+        x9.setVisible(false);
+    }//GEN-LAST:event_spriceKeyReleased
 
     /**
      * @param args the command line arguments
@@ -916,6 +1070,7 @@ public class Purchases extends javax.swing.JFrame {
     private javax.swing.JTextField catnew;
     private javax.swing.JComboBox<String> combopay;
     private javax.swing.JLabel combopaylab;
+    private javax.swing.JLabel datetxt;
     private javax.swing.JLabel ecocashlable;
     private javax.swing.JTextField ecocashtxt;
     private javax.swing.JButton jButton1;
@@ -936,8 +1091,10 @@ public class Purchases extends javax.swing.JFrame {
     private javax.swing.JLabel spricetxt;
     private javax.swing.JLabel swipelable;
     private javax.swing.JTextField swipetxt;
+    private javax.swing.JLabel timetxt;
     private javax.swing.JLabel usdlable;
     private javax.swing.JTextField usdtxt;
+    private javax.swing.JLabel usertxt;
     private javax.swing.JLabel x0;
     private javax.swing.JLabel x1;
     private javax.swing.JLabel x10;

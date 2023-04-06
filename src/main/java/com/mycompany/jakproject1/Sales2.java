@@ -44,6 +44,8 @@ import org.icepdf.ri.common.PrintJobWatcher;
 import java.util.Formatter;
 import javax.print.PrintService;
 import static javax.swing.JOptionPane.WARNING_MESSAGE;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 
 
@@ -323,15 +325,153 @@ public class Sales2 extends javax.swing.JFrame {
         else{
             PrinterOutputStream printerOutputStream = null;
             try {
+                Connect();
+                String bid = "b";
+                bid = bid + dtf2.format(now) + dtf3.format(now);
+                JSONObject objdesc=new JSONObject();
+                
+                for (int i=0; i<jTable1.getRowCount(); i++){
+                    objdesc.put(jTable1.getValueAt(i, 0).toString(), Integer.valueOf(jTable1.getValueAt(i, 2).toString()));
+                }
+                
+                Double usdtot = Double.valueOf(totusdtxt.getText());
+                Double zwltot = Double.valueOf(zwltxt.getText());
+                Double ecotot = Double.valueOf(ecocashtxt.getText());
+                Double swipetot = Double.valueOf(swipetxt.getText());
+                Double randtot = Double.valueOf(randtxt.getText());
+                
+                
+                JSONObject objtot = new JSONObject();
+                objtot.put("usd", usdtot);    
+                objtot.put("zwlcash", zwltot);    
+                objtot.put("ecocash", ecotot);
+                objtot.put("swipe", swipetot);
+                objtot.put("rand", randtot);
+                 
                 String datex = dtf.format(now);
-                PrinterOptions p=new PrinterOptions();
-                p.resetAll();
-                p.initialize();
-                p.feedBack((byte)2);
-                p.color(0);
-                p.alignCenter();
-                p.setText("JAK PROJECTS");
-                p.newLine();
+                
+                JSONObject objpay = new JSONObject();
+                objpay.put("usd", usd);    
+                objpay.put("zwlcash", zwl);    
+                objpay.put("ecocash", ecocash);
+                objpay.put("swipe", swipe);
+                objpay.put("rand", rand);
+                
+                Double usdch = Double.valueOf(usdctxt.getText());
+                Double zwlch = Double.valueOf(zwlctxt.getText());
+                Double randch = Double.valueOf(randctxt.getText());
+                
+                JSONObject objchan = new JSONObject();
+                objchan.put("usd", usdch);
+                objchan.put("zwlcash", zwlch);
+                objchan.put("rand", randch);
+                
+                String datex1 = dtf3.format(now);
+                String datex2 = dtf2.format(now);
+                String datex3 = dtf4.format(now);
+                
+                String y = objdesc.toString();
+                String y2 = objtot.toString();
+                String y3 = objpay.toString();
+                String y4 = objchan.toString();
+                
+                System.out.println(y);
+                System.out.println(y2);
+                System.out.println(y3);
+                System.out.println(y4);
+                
+                String usernamee = "";
+                pst = con.prepareStatement("select * from user where username = ?");
+                pst.setString(1, usertxt.getText());
+                rs = pst.executeQuery();
+                
+                if(rs.next()==true){
+                    usernamee = rs.getString("userid");
+                }
+                
+                String locationn = "";
+                pst = con.prepareStatement("select * from location where location = ?");
+                pst.setString(1, loctxt.getText());
+                rs = pst.executeQuery();
+                
+                if(rs.next()==true){
+                    locationn = rs.getString("locationid");
+                }
+                
+                pst = con.prepareStatement("insert into bill(billid,bdescription,total,btime,bdate,billcashier,amountpaid,bchange,billlocation) values(?,?,?,?,?,?,?,?,?)");
+                pst.setString(1, bid);
+                pst.setString(2, objdesc.toString());
+                pst.setString(3, objtot.toString());
+                pst.setString(4, datex1);
+                pst.setString(5, datex2);
+                pst.setString(6, usernamee);
+                pst.setString(7, objpay.toString());
+                pst.setString(8, objchan.toString());
+                pst.setString(9, locationn);
+                pst.executeUpdate();
+                
+                for (int i=0; i<jTable1.getRowCount(); i++){
+                    
+                    String item = jTable1.getValueAt(i, 0).toString();
+                    Integer quant = Integer.valueOf(jTable1.getValueAt(i, 2).toString());
+                    String itemid = "";
+                    pst = con.prepareStatement("select * from item where itemname = ?");
+                    pst.setString(1, item);
+                    rs = pst.executeQuery();
+                
+                if(rs.next()==true){
+                    itemid = rs.getString("itemid");
+                }
+                
+                    Integer itemnum;
+                    Integer stoc = null;
+                    pst = con.prepareStatement("select * from theoretical_stock where stockitemid = ?");
+                    pst.setString(1, itemid);
+                    rs = pst.executeQuery();
+                    
+                    if(rs.next()==true){
+                        itemnum = Integer.valueOf(rs.getString(datex2));
+                        stoc = itemnum - quant;
+                    }
+                    String datest = "`" + datex2 + "`";
+                    pst = con.prepareStatement("update theoretical_stock set " + datest + "=" + stoc + " where (stockitemid = " + itemid + ")");
+                    pst.executeUpdate();
+                    
+                    pst = con.prepareStatement("update item set quantiy = " + stoc + " where (itemid = " + itemid + ")");
+                    pst.executeUpdate();
+                    
+                }  
+                
+                        sumusd = (sumusd + Double.valueOf(jTextField1.getText())) - Double.parseDouble(usdctxt.getText());
+        sumzwl = (sumzwl + Double.valueOf(jTextField2.getText())) - Double.parseDouble(zwlctxt.getText());
+        sumrand = (sumrand + Double.valueOf(jTextField3.getText())) - Double.parseDouble(randctxt.getText());
+        sumeco = sumeco + Double.valueOf(jTextField4.getText());
+        sumswipe = sumswipe + Double.valueOf(jTextField5.getText());
+        
+        
+        pst = con.prepareStatement("update sales_temp set usdtotal = " + sumusd);
+        pst.executeUpdate();
+        pst = con.prepareStatement("update sales_temp set zwltotal = " + sumzwl);
+        pst.executeUpdate();
+        pst = con.prepareStatement("update sales_temp set randtotal = " + sumrand);
+        pst.executeUpdate();
+        pst = con.prepareStatement("update sales_temp set swipetotal = " + sumswipe);
+        pst.executeUpdate();
+        pst = con.prepareStatement("update sales_temp set ecocashtotal = " + sumeco);
+        pst.executeUpdate();
+        pst = con.prepareStatement("update sales_temp set last_updated = '" + datex3 + " " + datex1 + "'");
+        pst.executeUpdate();
+        
+
+                
+//                PrinterOptions p=new PrinterOptions();
+//                p.resetAll();
+//                p.initialize();
+//                p.feedBack((byte)2);
+//                p.color(0);
+//                p.alignCenter();
+//                p.setText("JAK PROJECTS");
+/*                p.newLine();
                 p.setText("Bulawayo \n\n");
                 p.newLine();
                 p.setText(datex);
@@ -401,7 +541,7 @@ public class Sales2 extends javax.swing.JFrame {
                 p.feed((byte)3);
                 p.finit();
                 feedPrinter(p.finalCommandSet().getBytes());
-                
+*/                
                 
                 
                 
@@ -425,30 +565,34 @@ public class Sales2 extends javax.swing.JFrame {
                 usdc.setText("");
                 zwlc.setText("");
                 randc.setText("");
-                usdctxt.setText("");
-                zwlctxt.setText("");
-                randctxt.setText("");
+                usdctxt.setText("0.00");
+                zwlctxt.setText("0.00");
+                randctxt.setText("0.00");
                 usdbutton.setEnabled(true);
                 randbutton.setEnabled(true);
                 zwlbutton.setEnabled(true);
                 swipebutton.setEnabled(true);
                 ecobutton.setEnabled(true);
+                usdradio.setSelected(false);
+                zwlradio.setSelected(false);
+                randradio.setSelected(false);
+                swiperadio.setSelected(false);
+                ecoradio.setSelected(false);
                 
-                PrintService printService = PrinterOutputStream.getPrintServiceByName("EPSON TM-T20III Receipt");
+/*                PrintService printService = PrinterOutputStream.getPrintServiceByName("EPSON TM-T20III Receipt");
                 printerOutputStream = new PrinterOutputStream(printService);
                 try (EscPos escpos = new EscPos(printerOutputStream)) {
                     escpos.write(27).write(112).write(0).write(25).write(250);
                     escpos.cut(EscPos.CutMode.FULL);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    printerOutputStream.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
-                }
+*/                
             }
+            catch (SQLException ex) {
+            Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+            }
+ //           catch (IOException ex) {
+ //               Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
+ //           } 
 
 
         }
@@ -488,10 +632,26 @@ public class Sales2 extends javax.swing.JFrame {
         };
         
         t.start();
+        
+        try {
+                    Connect();
+                    pst = con.prepareStatement("select * from sales_temp");
+                    rs = pst.executeQuery();
+                    
+                    if(rs.next()==true){
+                        sumusd = Double.valueOf(rs.getString("usdtotal"));
+                        sumzwl = Double.valueOf(rs.getString("zwltotal"));
+                        sumrand = Double.valueOf(rs.getString("randtotal"));
+                        sumeco = Double.valueOf(rs.getString("ecocashtotal"));
+                        sumswipe = Double.valueOf(rs.getString("swipetotal"));
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
     }
     
-        Sales2(String user){
+        Sales2(String user, String location){
         initComponents();
         
         Connect();
@@ -524,6 +684,24 @@ public class Sales2 extends javax.swing.JFrame {
         t.start();
         
         usertxt.setText(user);
+        loctxt.setText(location);
+        
+        
+                try {
+                    Connect();
+                    pst = con.prepareStatement("select * from sales_temp");
+                    rs = pst.executeQuery();
+                    
+                    if(rs.next()==true){
+                        sumusd = Double.valueOf(rs.getString("usdtotal"));
+                        sumzwl = Double.valueOf(rs.getString("zwltotal"));
+                        sumrand = Double.valueOf(rs.getString("randtotal"));
+                        sumeco = Double.valueOf(rs.getString("ecocashtotal"));
+                        sumswipe = Double.valueOf(rs.getString("swipetotal"));
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
+                }
     }
 
     Connection con;
@@ -533,6 +711,17 @@ public class Sales2 extends javax.swing.JFrame {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd  HH:mm");  
                 LocalDateTime now = LocalDateTime.now();
                 private static final DecimalFormat decfors = new DecimalFormat("0.00");
+                
+                DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                
+                DateTimeFormatter dtf3 = DateTimeFormatter.ofPattern("HH:mm:ss");
+                
+                DateTimeFormatter dtf4 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                
+
+
+                
+                
     
                 
                 
@@ -547,6 +736,15 @@ public class Sales2 extends javax.swing.JFrame {
         }
       
     }
+    
+        
+        
+        
+        Double sumusd;
+        Double sumzwl;
+        Double sumrand;
+        Double sumeco;
+        Double sumswipe;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -634,6 +832,7 @@ public class Sales2 extends javax.swing.JFrame {
         ecocashtxt = new javax.swing.JLabel();
         swipetxt = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
+        loctxt = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setExtendedState(6);
@@ -1075,6 +1274,11 @@ public class Sales2 extends javax.swing.JFrame {
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Purchases");
         jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton4.setBackground(new java.awt.Color(51, 255, 0));
         jButton4.setFont(new java.awt.Font("Verdana", 1, 20)); // NOI18N
@@ -1313,6 +1517,8 @@ public class Sales2 extends javax.swing.JFrame {
             }
         });
 
+        loctxt.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -1350,16 +1556,19 @@ public class Sales2 extends javax.swing.JFrame {
                         .addComponent(timetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(510, 510, 510)
                         .addComponent(usertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loctxt, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(datetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(timetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(usertxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(datetxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(timetxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(usertxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(loctxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1419,6 +1628,10 @@ public class Sales2 extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
+        
+        
+        
         Double usd = Double.valueOf(jTextField1.getText());
         Double zwl = Double.valueOf(jTextField2.getText());
         Double rand = Double.valueOf(jTextField3.getText());
@@ -1440,8 +1653,13 @@ Payout(usd, zwl, rand, ecocash, swipe);
         swipe1txt.setText("");
         eco1txt.setText("");
         rand1txt.setText("");
-            ShiftEnd se = new ShiftEnd();
-            se.setVisible(true);
+            String user = usertxt.getText();
+            Double usd = sumusd;
+            Double zwl = sumzwl;
+            Double rand = sumrand;
+            Double eco = sumeco;
+            Double swipe = sumswipe;
+        new ShiftEnd2(user, usd, zwl, rand, eco, swipe).setVisible(true);
             this.setVisible(false);
         }
 
@@ -1741,6 +1959,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
                         }
                         else{
                             usdradio.setSelected(false);
+                            usdbutton.setEnabled(true);
+                            randbutton.setEnabled(true);
+                            zwlbutton.setEnabled(true);
+                            swipebutton.setEnabled(true);
+                            ecobutton.setEnabled(true);
                         }
                     
                     
@@ -1890,6 +2113,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
                     }
                     else{
                         zwlradio.setSelected(false);
+                        usdbutton.setEnabled(true);
+                randbutton.setEnabled(true);
+                zwlbutton.setEnabled(true);
+                swipebutton.setEnabled(true);
+                ecobutton.setEnabled(true);
                     }       } catch (SQLException ex) {
                     Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2036,6 +2264,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
                     }
                     else{
                         randradio.setSelected(false);
+                        usdbutton.setEnabled(true);
+                randbutton.setEnabled(true);
+                zwlbutton.setEnabled(true);
+                swipebutton.setEnabled(true);
+                ecobutton.setEnabled(true);
                     }       } catch (SQLException ex) {
                     Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2167,6 +2400,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
                     }
                     else{
                         ecoradio.setSelected(false);
+                        usdbutton.setEnabled(true);
+                randbutton.setEnabled(true);
+                zwlbutton.setEnabled(true);
+                swipebutton.setEnabled(true);
+                ecobutton.setEnabled(true);
                     }       } catch (SQLException ex) {
                     Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2298,6 +2536,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
                     }
                     else{
                         swiperadio.setSelected(false);
+                        usdbutton.setEnabled(true);
+                randbutton.setEnabled(true);
+                zwlbutton.setEnabled(true);
+                swipebutton.setEnabled(true);
+                ecobutton.setEnabled(true);
                     }       } catch (SQLException ex) {
                     Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2305,6 +2548,9 @@ Payout(usd, zwl, rand, ecocash, swipe);
 
     private void usdbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usdbuttonActionPerformed
         // TODO add your handling code here:
+        
+        sumusd = sumusd + Double.valueOf(usd1txt.getText());
+        
         Double usd = Double.valueOf(usd1txt.getText());
         Double zwl = 0.00;
         Double rand = 0.00;
@@ -2399,6 +2645,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
                         }
                         else{
                             usdradio.setSelected(false);
+                            usdbutton.setEnabled(true);
+                randbutton.setEnabled(true);
+                zwlbutton.setEnabled(true);
+                swipebutton.setEnabled(true);
+                ecobutton.setEnabled(true);
                         }
                     
                     
@@ -2551,6 +2802,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
                     }
                     else{
                         zwlradio.setSelected(false);
+                        usdbutton.setEnabled(true);
+                randbutton.setEnabled(true);
+                zwlbutton.setEnabled(true);
+                swipebutton.setEnabled(true);
+                ecobutton.setEnabled(true);
                     }       } catch (SQLException ex) {
                     Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2700,6 +2956,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
                     }
                     else{
                         randradio.setSelected(false);
+                        usdbutton.setEnabled(true);
+                randbutton.setEnabled(true);
+                zwlbutton.setEnabled(true);
+                swipebutton.setEnabled(true);
+                ecobutton.setEnabled(true);
                     }       } catch (SQLException ex) {
                     Logger.getLogger(Sales2.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2719,6 +2980,11 @@ Payout(usd, zwl, rand, ecocash, swipe);
 
     private void zwlbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zwlbuttonActionPerformed
         // TODO add your handling code here:
+        
+        
+        sumzwl = sumzwl + Double.valueOf(zwl1txt.getText());
+        
+        
         Double usd = 0.00;
         Double zwl = Double.valueOf(zwl1txt.getText());
         Double rand = 0.00;
@@ -2730,6 +2996,9 @@ Payout(usd, zwl, rand, ecocash, swipe);
 
     private void randbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randbuttonActionPerformed
         // TODO add your handling code here:
+        
+        sumrand = sumrand + Double.valueOf(rand1txt.getText());
+        
         Double usd = 0.00;
         Double zwl = 0.00;
         Double rand = Double.valueOf(rand1txt.getText());
@@ -2741,6 +3010,9 @@ Payout(usd, zwl, rand, ecocash, swipe);
 
     private void ecobuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ecobuttonActionPerformed
         // TODO add your handling code here:
+        
+        sumeco = sumeco + Double.valueOf(eco1txt.getText());
+        
         Double usd = 0.00;
         Double zwl = 0.00;
         Double rand = 0.00;
@@ -2752,6 +3024,9 @@ Payout(usd, zwl, rand, ecocash, swipe);
 
     private void swipebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_swipebuttonActionPerformed
         // TODO add your handling code here:
+        
+        sumswipe = sumswipe + Double.valueOf(swipe1txt.getText());
+        
         Double usd = 0.00;
         Double zwl = 0.00;
         Double rand = 0.00;
@@ -2878,10 +3153,17 @@ Payout(usd, zwl, rand, ecocash, swipe);
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        Orders oe = new Orders();
-            oe.setVisible(true);
+        String user = usertxt.getText();
+        new Orders(user).setVisible(true);
+        
          
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+         String user = usertxt.getText();
+        new Purchases(user).setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2980,6 +3262,7 @@ Payout(usd, zwl, rand, ecocash, swipe);
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JLabel loctxt;
     private javax.swing.JTextField pricetxt;
     private javax.swing.JTextField producttxt;
     private javax.swing.JTextField quantitytxt;
