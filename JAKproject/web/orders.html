@@ -10,19 +10,48 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <center><form>
-            <table>
+        
+        <table border="3" width="96%" bgcolor="cyan" height="8%">
                 <tr>
-                    <th><input type="submit" value="Pending Orders" /></th>
+                    <th width="16%"><font color="white" size="4"><a href="Home.html">Home</a></font></th>
+                    <th width="16%"><font color="white" size="4"><a href="orders.html">Orders</a></font></th>
+                    <th width="16%"><font color="white" size="4"><a href="Pricing.html">Pricing</a></font></th>
+                    <th width="16%"><font color="white" size="4"><a href="users.html">Users</a></font></th>
+                    <th width="16%"><font color="white" size="4"><a href="reports.html">Reports</a></font></th>
+                    <th width="16%"><font color="white" size="4"><a href="index.html">Logout</a></font></th>
                 </tr>
+            </table>
+        
+        <center>
+            <form action="./PendingOrderServlet">
+            <table border="3" width="50%" bgcolor="lightcyan" height="50%">
+                
                 <tr>
-                    <th><input type="submit" value="Orders In Transit" /></th>
+                    <th width="50%"><font color="white" size="7"><input type="submit" value="Pending Orders" /></font></th>
+                
                 </tr>
+            </table>
+            </form>
+            
+            <table border="3" width="50%" bgcolor="lightcyan" height="50%">
                 <tr>
-                    <th><input type="submit" value="Order Made" /></th>
+                    <th width="50%"><font color="white" size="7"><a href="Orders In Transit.html">Orders In Transit</a></font></th>
+                </tr>
+            </table>
+            
+            <table border="3" width="50%" bgcolor="lightcyan" height="50%">
+                <tr>
+                    <th width="50%"><font color="white" size="7"><a href="Recently Delivered Orders.html">Recently Delivered Orders</a></font></th>
+                </tr>
+            </table>
+                
+            <table border="3" width="50%" bgcolor="lightcyan" height="50%"> 
+                <tr>
+                    <th width="50%"><font color="white" size="7"><a href="Orders Made.html">Order Made</a></font></th>
                 </tr>
                 
             </table>
-        </form> </center>
+            
+         </center>
     </body>
 </html>
