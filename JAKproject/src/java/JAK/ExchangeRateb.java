@@ -77,8 +77,12 @@ public class ExchangeRateb extends HttpServlet {
             String loctid="";
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            
+            
             Statement stmt=con.createStatement();
-//            stmt.executeUpdate("ALTER TABLE exchangerate ADD `"+ dtf2.format(now) +"` decimal(65,2);");
+            
+            
+            stmt.executeUpdate("ALTER TABLE exchangerate ADD `"+ dtf2.format(now) +"` decimal(65,2);");
             String ratee = "";
             
             PreparedStatement pst = con.prepareStatement("select * from location");

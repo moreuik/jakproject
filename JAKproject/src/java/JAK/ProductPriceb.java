@@ -4,13 +4,21 @@
  */
 package JAK;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -57,7 +65,88 @@ public class ProductPriceb extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        PrintWriter out=response.getWriter();
+        
+        out.print("<h1>UPDATING</h1>");
+        out.print("<h1>PLEASE WAIT...</h1>"); //maybe insert running animation or something
+        
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/jak_database","root","admin");
+            String loctid="";
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            Statement stmt=con.createStatement();
+  //          stmt.executeUpdate("ALTER TABLE sellingprice ADD `"+ dtf2.format(now) +"` decimal(65,2);");
+            String pricee = "";
+            
+            
+ //           stmt=con.createStatement();
+  //          stmt.executeQuery("");
+            PreparedStatement pst = con.prepareStatement("select * from location");
+            ResultSet rs =pst.executeQuery();
+            
+            while(rs.next()){
+                String act="";
+             act = request.getParameter("price");
+             
+             
+if (act == null) {
+    //no button has been selected
+}  else if (act.equals(rs.getString(1))) {
+    //update button was pressed
+    loctid = rs.getString(1);
+} 
+            
+            }
+            
+            ResultSet rs0=pst.executeQuery("select * from item where (`locationid`='"+loctid+"')");
+            
+            while(rs0.next()){
+            rs=pst.executeQuery("select * from category where (`catloc`='"+loctid+"')");
+            
+            while(rs.next()){
+                
+                
+                if(request.getParameter(rs0.getString(1)).trim()==null || request.getParameter(rs0.getString(1)).trim().equals("")){
+                    
+                }
+                
+                else if( request.getParameter(rs0.getString(1)).trim().equals(rs.getString(1))){
+                    
+                stmt.executeUpdate("update item set `category`='"+rs.getString(1)+"' where `itemid`='"+rs0.getString(1)+"'");
+                
+            }
+            
+            }
+            }
+            
+  //          rs=pst.executeQuery("select * from item where (`locationid`='"+loctid+"')");
+           
+  /*          while(rs.next()){
+                
+                
+                if(request.getParameter(rs.getString(1)).trim()==null || request.getParameter(rs.getString(1)).trim().equals("")){
+                    
+                }
+                
+                else if( request.getParameter(rs.getString(1)).trim() != null){
+                    pricee = request.getParameter(rs.getString(1)).trim();
+                stmt.executeUpdate("update sellingprice set `"+dtf2.format(now)+"`='"+pricee+"' where `itemid`='"+rs.getString(1)+"'");
+                stmt.executeUpdate("update item set `sellingprice`='"+pricee+"' where `itemid`='"+rs.getString(1)+"'");
+            }
+            
+            } 
+   */         
+            response.sendRedirect("ProductPrice?loctid="+loctid);
+            
+            
+        }catch(ClassNotFoundException | SQLException p){
+            System.out.println(p);
+        }
+        
+        
     }
 
     /**

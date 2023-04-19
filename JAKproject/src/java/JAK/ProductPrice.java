@@ -119,7 +119,7 @@ public class ProductPrice extends HttpServlet {
 "</div>");
             }
             
-            out.print("<button type=\"submit\" name=\"rate\" value=\""+loctid+"\">Update</button>");
+            out.print("<button type=\"submit\" name=\"price\" value=\""+loctid+"\">Update</button>");
             
             
  //           out.print("<input type=\"submit\" name=\""+ loctid +"\" ");
@@ -133,12 +133,19 @@ public class ProductPrice extends HttpServlet {
  //               out.print("\" > ");    
              
  
-            out.print("<font color=\"white\" size=\"4\"><a href=\"./ExchangeRateServ\">Back</a></font>");
- 
-            out.print("<center><table border=1><tr><th>#</th><th>Currency</th><th>Rates</th><th>Update</th></tr>");
+            out.print("<font color=\"white\" size=\"4\"><a href=\"./ProductPriceServlet\">Back</a></font>");
+            
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("select * from price_calculation order by date desc");
+            if(rs.next()==true){
+            out.print("<center><table><tr><th>Price Calculation Value</th><th>"+rs.getString(2)+"</th><th><input type=\"text\" name=\""+ rs.getString(1) +"\" value=\" \" /></th></tr></center>");
+            
+            
+            }
+            out.print("<center><table border=1><tr><th>#</th><th>Product Name</th><th>Selling Price</th><th>Category</th><th>New Price</th></tr>");
             
             stmt=con.createStatement();
-            rs=stmt.executeQuery("select * from paytype where (`extloc`='"+loctid+"')");
+            rs=stmt.executeQuery("select * from item where (`locationid`='"+loctid+"')");
             int m=1;
             while(rs.next()){
                 out.print("<>");
@@ -146,13 +153,38 @@ public class ProductPrice extends HttpServlet {
                 out.print(m);
                 out.print("</td>");
                 out.print("<td>");
+                out.print(rs.getString(2));
+                out.print("</td>");
+                out.print("<td>");
                 out.print(rs.getString(3));
                 out.print("</td>");
                 out.print("<td>");
-                out.print(rs.getString(4));
+                String cat = "";
+                
+                stmt=con.createStatement();
+                ResultSet rs2 = stmt.executeQuery("select * from category where `categoryid`='"+ rs.getString(4) +"'");
+                if(rs2.next()==true){
+                    
+                    cat = rs2.getString(2);
+                    
+                    
+                }
+                
+                
+                out.print("<select name=\""+rs.getString(1)+"\" >\n" +
+                        "    <option value=\""+rs.getString(4)+"\">"+cat+"</option>\n");
+                rs2 = stmt.executeQuery("select * from category where not (`categoryid`='"+rs.getString(4)+"')");
+                while(rs2.next()){                   
+                    out.print("    <option value=\""+rs2.getString(1)+"\">"+rs2.getString(2)+"</option>\n");
+
+                    
+                }
+                
+                out.print("</select>");
                 out.print("</td>");
+                
                 out.print("<td>");
-                out.print("<input type=\"text\" name=\""+ rs.getString(1) +"\" value=\" \" /></td></tr>");
+                out.print("<input type=\"text\" name=\"p"+ rs.getString(1) +"\" value=\" \" /></tr>");
                 m++;
             }
             
